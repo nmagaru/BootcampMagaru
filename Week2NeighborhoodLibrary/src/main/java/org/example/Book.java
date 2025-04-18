@@ -71,4 +71,14 @@ public class Book {
         isCheckedOut= false;
         checkedOutTo = "";
     }
+
+
+    //toString override
+    @Override
+    public String toString() {
+        return
+                "id: " + id +
+                ", isbn: " + isbn +
+                ", title: " + title;
+    }
 }

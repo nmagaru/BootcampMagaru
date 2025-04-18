@@ -44,6 +44,10 @@ public class Main {
             int userChoice = scanner.nextInt();
 
             switch (userChoice) {
+                case 1:
+                    displayBooks(library, false);
+                    userCheckOut(library, scanner);
+                    break;
                 case 3:
                     System.exit(0);
                     break;
@@ -52,6 +56,52 @@ public class Main {
                     break;
             }
         }
+    }
 
+    public static void displayBooks(Book[] library, boolean showCheckedOut) {
+        //loop through and display book information
+        for (Book book : library) {
+            if (book != null && showCheckedOut == book.isCheckedOut()) {
+                System.out.println(book.toString());
+            }
+        }
+    }
+
+    public static void userCheckOut (Book[] library, Scanner scanner) {
+        //option select
+        System.out.println(
+                "\n(C) - Check out a book\n" +
+                "(X) - Exit to home screen\n"
+        );
+        System.out.print("Enter your choice: ");
+
+        scanner.nextLine();
+        String userChoice = scanner.nextLine().toUpperCase();
+
+        switch (userChoice) {
+            case "C":
+                System.out.print("Enter your name: ");
+                String userName = scanner.nextLine();
+                System.out.print("Enter the title of the book you want to check out: ");
+                String bookTitle = scanner.nextLine();
+
+                //search for book in library, update properties
+                for (Book book : library) {
+                    if (book != null && !book.isCheckedOut() && book.getTitle().equalsIgnoreCase(bookTitle)) {
+                        book.setCheckedOut(true);
+                        book.setCheckedOutTo(userName);
+                        System.out.println(book.getTitle() + " was successfully checked out");
+                        return;
+                    }
+                }
+                System.out.println("Book not found or already checked out...returning to home screen");
+
+                break;
+            case "X":
+                break;
+            default:
+                System.out.println("Invalid choice, please select one of the above options.");
+                break;
+        }
     }
 }
