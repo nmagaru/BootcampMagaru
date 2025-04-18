@@ -1,6 +1,7 @@
 package org.example;
 
 import java.util.Scanner;
+import java.time.LocalDate;
 
 public class Main {
     public static void main(String[] args) {
@@ -85,6 +86,9 @@ public class Main {
         scanner.nextLine();
         String userChoice = scanner.nextLine().toUpperCase();
 
+        //STRETCH: create today's date as a date object
+        LocalDate todayDate = LocalDate.now();
+
         switch (userChoice) {
             case "C":
                 System.out.print("Enter your name: ");
@@ -97,6 +101,8 @@ public class Main {
                     if (book != null && !book.isCheckedOut() && book.getId() == bookId) {
                         book.setCheckedOut(true);
                         book.setCheckedOutTo(userName);
+                        //STRETCH: set today's date + two weeks for the due date
+                        book.setDueDate(todayDate.plusDays(14));
                         System.out.println(book.getTitle() + " was successfully checked out.");
                         return;
                     }
@@ -126,6 +132,7 @@ public class Main {
 
         scanner.nextLine();
         String userChoice = scanner.nextLine().toUpperCase();
+        LocalDate todayDate = LocalDate.now();
 
         switch (userChoice) {
             case "C":
@@ -142,6 +149,15 @@ public class Main {
                         book.setCheckedOut(false);
                         book.setCheckedOutTo("");
                         System.out.println(book.getTitle() + " was successfully checked in.");
+
+                        //STRETCH: display a message if book was returned on time or not
+                        if (todayDate.isAfter(book.getDueDate())) {
+                            System.out.println("Book is late, pay $5 fine.");
+                        }
+                        else {
+                            System.out.println("Book was returned on time.");
+                        }
+
                         return;
                     }
                     else if (book != null && !book.isCheckedOut() &&

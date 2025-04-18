@@ -1,5 +1,7 @@
 package org.example;
 
+import java.time.LocalDate;
+
 public class Book {
     //properties
     private int id;
@@ -7,6 +9,8 @@ public class Book {
     private String title;
     private boolean isCheckedOut;
     private String checkedOutTo;
+    //STRETCH: add due date, initialize to null
+    private LocalDate dueDate;
 
 
     //constructors
@@ -16,6 +20,7 @@ public class Book {
         this.title = title;
         this.isCheckedOut = isCheckedOut;
         this.checkedOutTo = checkedOutTo;
+        this.dueDate = null;
     }
 
 
@@ -60,6 +65,14 @@ public class Book {
         this.checkedOutTo = checkedOutTo;
     }
 
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
 
     //methods
     public void checkOut(String name) {
@@ -74,11 +87,13 @@ public class Book {
 
 
     //toString override
+    //STRETCH: update toString to include due date
     @Override
     public String toString() {
         return
                 "id: " + id +
                 ", isbn: " + isbn +
-                ", title: " + title;
+                ", title: " + title +
+                ", due date: " + dueDate;
     }
 }
