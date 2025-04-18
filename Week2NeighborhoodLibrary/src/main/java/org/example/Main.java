@@ -151,11 +151,15 @@ public class Main {
                         System.out.println(book.getTitle() + " was successfully checked in.");
 
                         //STRETCH: display a message if book was returned on time or not
-                        if (todayDate.isAfter(book.getDueDate())) {
-                            System.out.println("Book is late, pay $5 fine.");
+                        if (book.getDueDate() != null) {
+                            if (todayDate.isAfter(book.getDueDate())) {
+                                System.out.println("Book is late, pay $5 fine.");
+                            } else {
+                                System.out.println("Book was returned on time.");
+                            }
                         }
                         else {
-                            System.out.println("Book was returned on time.");
+                            System.out.println("Due date does not exist.");
                         }
 
                         return;
