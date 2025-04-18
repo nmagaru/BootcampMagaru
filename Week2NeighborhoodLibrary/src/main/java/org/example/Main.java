@@ -6,26 +6,26 @@ public class Main {
     public static void main(String[] args) {
         //create an array of 20 books
         Book[] library = {
-                new Book(1023, "9780143127741", "The Lost Realm", false, ""),
-                new Book(2045, "9780062315007", "Echoes of Tomorrow", false, ""),
-                new Book(3099, "9780451524935", "Whispers in the Fog", false, ""),
-                new Book(4120, "9780385754729", "The Clockwork Garden", false, ""),
-                new Book(5176, "9780553573404", "Shadows of Arkenfall", false, ""),
-                new Book(6243, "9780345803481", "Frostbound", false, ""),
-                new Book(7388, "9780307277671", "The Last Ember", false, ""),
-                new Book(8421, "9780061120084", "Chronicles of the Hollow", false, ""),
-                new Book(9562, "9780141439600", "Midnight’s Mirage", false, ""),
-                new Book(1034, "9781451673319", "The Glass Tundra", false, ""),
-                new Book(1167, "9780316769488", "Beyond the Iron Sky", false, ""),
-                new Book(2299, "9780439023481", "The Library of Echoes", false, ""),
-                new Book(3340, "9780743273565", "Starfall Prophecy", false, ""),
-                new Book(4481, "9780316015844", "The Crimson Pact", false, ""),
-                new Book(5523, "9780618260300", "Winds of Isalor", false, ""),
-                new Book(6639, "9780060850524", "The Seventh Seal", false, ""),
-                new Book(7752, "9780385472579", "A Song for the Void", false, ""),
-                new Book(8864, "9780451526342", "The Dreamcatcher's Curse", false, ""),
-                new Book(9910, "9780142424179", "The Alchemist’s Code", false, ""),
-                new Book(1098, "9780547928227", "Fragments of the Moon", false, "")
+                new Book(100, "9780143127741", "The Lost Realm", false, ""),
+                new Book(101, "9780062315007", "Echoes of Tomorrow", false, ""),
+                new Book(102, "9780451524935", "Whispers in the Fog", false, ""),
+                new Book(103, "9780385754729", "The Clockwork Garden", false, ""),
+                new Book(104, "9780553573404", "Shadows of Arkenfall", false, ""),
+                new Book(105, "9780345803481", "Frostbound", false, ""),
+                new Book(106, "9780307277671", "The Last Ember", false, ""),
+                new Book(107, "9780061120084", "Chronicles of the Hollow", false, ""),
+                new Book(108, "9780141439600", "Midnight’s Mirage", false, ""),
+                new Book(109, "9781451673319", "The Glass Tundra", false, ""),
+                new Book(200, "9780316769488", "Beyond the Iron Sky", false, ""),
+                new Book(201, "9780439023481", "The Library of Echoes", false, ""),
+                new Book(202, "9780743273565", "Starfall Prophecy", false, ""),
+                new Book(203, "9780316015844", "The Crimson Pact", false, ""),
+                new Book(204, "9780618260300", "Winds of Isalor", false, ""),
+                new Book(205, "9780060850524", "The Seventh Seal", false, ""),
+                new Book(206, "9780385472579", "A Song for the Void", false, ""),
+                new Book(207, "9780451526342", "The Dreamcatcher's Curse", false, ""),
+                new Book(208, "9780142424179", "The Alchemist’s Code", false, ""),
+                new Book(209, "9780547928227", "Fragments of the Moon", false, "")
         };
 
 
@@ -48,6 +48,10 @@ public class Main {
                     displayBooks(library, false);
                     userCheckOut(library, scanner);
                     break;
+                case 2:
+                    displayBooks(library, true);
+                    userCheckIn(library, scanner);
+                    break;
                 case 3:
                     System.exit(0);
                     break;
@@ -63,6 +67,9 @@ public class Main {
         for (Book book : library) {
             if (book != null && showCheckedOut == book.isCheckedOut()) {
                 System.out.println(book.toString());
+                if (showCheckedOut) {
+                    System.out.println("Checked out by: " + book.getCheckedOutTo());
+                }
             }
         }
     }
@@ -82,19 +89,74 @@ public class Main {
             case "C":
                 System.out.print("Enter your name: ");
                 String userName = scanner.nextLine();
-                System.out.print("Enter the title of the book you want to check out: ");
-                String bookTitle = scanner.nextLine();
+                System.out.print("Enter the ID of the book you want to check out: ");
+                int bookId = scanner.nextInt();
 
                 //search for book in library, update properties
                 for (Book book : library) {
-                    if (book != null && !book.isCheckedOut() && book.getTitle().equalsIgnoreCase(bookTitle)) {
+                    if (book != null && !book.isCheckedOut() && book.getId() == bookId) {
                         book.setCheckedOut(true);
                         book.setCheckedOutTo(userName);
-                        System.out.println(book.getTitle() + " was successfully checked out");
+                        System.out.println(book.getTitle() + " was successfully checked out.");
+                        return;
+                    }
+                    else if (book!= null && book.isCheckedOut() && book.getId() == bookId) {
+                        System.out.println("Book is already checked out.");
                         return;
                     }
                 }
-                System.out.println("Book not found or already checked out...returning to home screen");
+                System.out.println("Book not found.");
+
+                break;
+            case "X":
+                break;
+            default:
+                System.out.println("Invalid choice, please select one of the above options.");
+                break;
+        }
+    }
+
+    public static void userCheckIn (Book[] library, Scanner scanner) {
+        //option select
+        System.out.println(
+                "\n(C) - Check in a book\n" +
+                "(X) - Exit to home screen\n"
+        );
+        System.out.print("Enter your choice: ");
+
+        scanner.nextLine();
+        String userChoice = scanner.nextLine().toUpperCase();
+
+        switch (userChoice) {
+            case "C":
+                System.out.print("Enter your name: ");
+                String userName = scanner.nextLine();
+                System.out.print("Enter the ID of the book you want to check in: ");
+                int bookId = scanner.nextInt();
+
+                //search for book in library, update properties
+                for (Book book : library) {
+                    if (book != null && book.isCheckedOut() &&
+                            book.getId() == bookId &&
+                            book.getCheckedOutTo().equalsIgnoreCase(userName)) {
+                        book.setCheckedOut(false);
+                        book.setCheckedOutTo("");
+                        System.out.println(book.getTitle() + " was successfully checked in.");
+                        return;
+                    }
+                    else if (book != null && !book.isCheckedOut() &&
+                            book.getId() == bookId) {
+                        System.out.println("Book is already checked in.");
+                        return;
+                    }
+                    else if (book != null && book.isCheckedOut() &&
+                            book.getId() == bookId &&
+                            !book.getCheckedOutTo().equalsIgnoreCase(userName)) {
+                        System.out.println("Book is checked out by another user.");
+                        return;
+                    }
+                }
+                System.out.println("Book not found.");
 
                 break;
             case "X":
