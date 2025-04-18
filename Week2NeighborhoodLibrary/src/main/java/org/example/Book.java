@@ -59,4 +59,16 @@ public class Book {
     public void setCheckedOutTo(String checkedOutTo) {
         this.checkedOutTo = checkedOutTo;
     }
+
+
+    //methods
+    public void checkOut(String name) {
+        isCheckedOut = true;
+        checkedOutTo = name;
+    }
+
+    public void checkIn() {
+        isCheckedOut= false;
+        checkedOutTo = "";
+    }
 }
