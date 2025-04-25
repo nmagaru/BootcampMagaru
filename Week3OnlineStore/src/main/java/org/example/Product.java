@@ -44,4 +44,13 @@ public class Product {
     public void setDepartment(String department) {
         this.department = department;
     }
+
+    @Override
+    public String toString() {
+        return
+                "SKU:\t\t" + sku +
+                "\nName:\t\t" + name +
+                "\nPrice:\t\t" + price +
+                "\nDepartment:\t" + department + "\n";
+    }
 }

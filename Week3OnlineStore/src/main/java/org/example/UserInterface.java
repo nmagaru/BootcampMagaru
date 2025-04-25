@@ -4,8 +4,15 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
+    private static List<Product> products;
+    private static ShoppingCart cart;
+
+
     //OPTIONAL: handle all menus
-    public static void displayMenu(List<Product> products, ShoppingCart cart) {
+    public static void displayMenu() {
+        products = FileLoader.readFile();
+        cart = new ShoppingCart();
+
         Scanner scanner = new Scanner(System.in);
         int selection;
 
@@ -41,11 +48,17 @@ public class UserInterface {
                     break;
                 case 2:
                     //search by sku
-                    System.out.print("Search for this product SKU: ");
+                    System.out.print("Search by product SKU: ");
                     String searchSKU = scanner.nextLine();
 
-                    List<Product> skuResult = ProductRepository.findByProperty(products, searchSKU, 0, 0, "sku");
-                    ProductRepository.displayProducts(skuResult);
+                    Product skuResult = ProductRepository.findBySKU(products, searchSKU);
+                    if (skuResult != null) {
+                        System.out.println(skuResult.toString());
+                    }
+                    else {
+                        System.out.println("Product not found.\n");
+                    }
+
                     break;
                 case 3:
                     //search by price range
@@ -57,29 +70,63 @@ public class UserInterface {
                     scanner.nextLine();
 
                     List<Product> priceResult = ProductRepository.findByProperty(products, "", minPrice, maxPrice, "price");
-                    ProductRepository.displayProducts(priceResult);
+                    if (priceResult != null) {
+                        ProductRepository.displayProducts(priceResult);
+                    }
+                    else {
+                        System.out.println("No products were found.\n");
+                    }
+
                     break;
                 case 4:
                     //search by name
-                    System.out.print("Search for this product name: ");
+                    System.out.print("Search by product name: ");
                     String searchName = scanner.nextLine();
 
                     List<Product> nameResult = ProductRepository.findByProperty(products, searchName, 0, 0, "name");
-                    ProductRepository.displayProducts(nameResult);
+                    if (nameResult != null) {
+                        ProductRepository.displayProducts(nameResult);
+                    }
+                    else {
+                        System.out.println("No products were found.\n");
+                    }
                     break;
                 case 5:
                     //add to cart
-                    //TODO: which property is it using?
-                    System.out.println("Enter ??? ");
+                    System.out.print("Enter the SKU of the product you want to add to your cart: ");
+                    String purchaseSKU = scanner.nextLine();
+                    boolean productFound = false;
+
+                    for (Product product : products) {
+                        if (purchaseSKU.equalsIgnoreCase(product.getSku())) {
+                            productFound = true;
+                            cart.addProductToCart(product);
+                            System.out.println(product.getName() + " successfully added to cart.\n");
+                        }
+                    }
+
+                    if (!productFound) {
+                        System.out.println("Product not found.\n");
+                    }
                     break;
                 case 6:
                     //remove from cart
+                    System.out.print("Enter the SKU of the product you want to remove from your cart: ");
+                    String removeSKU = scanner.nextLine();
+
+                    cart.removeProductFromCart(removeSKU);
                     break;
                 case 7:
                     //view cart
+                    cart.displayCart();
                     break;
                 case 8:
                     //checkout
+                    System.out.println("Your cart total is: " + cart.getCartTotal());
+                    System.out.println("Thank you for shopping with us!\n");
+
+                    cart.clearCart();
+                    //TODO: optional objectives?
                     break;
                 case 9:
                     //exit application

@@ -22,12 +22,16 @@ public class ShoppingCart {
         for (int i = 0; i < cartList.size(); i++) {
             if (sku.equalsIgnoreCase(cartList.get(i).getSku())) {
                 productToRemove = cartList.get(i);
+                System.out.println(productToRemove.getName() + " successfully removed from cart.\n");
                 break;
             }
         }
 
         if (productToRemove != null) {
             cartList.remove(productToRemove);
+        }
+        else {
+            System.out.println("Product not found.\n");
         }
     }
 
@@ -42,6 +46,15 @@ public class ShoppingCart {
     }
 
     public void displayCart() {
-        ProductRepository.displayProducts(cartList);
+        if (!cartList.isEmpty()) {
+            ProductRepository.displayProducts(cartList);
+        }
+        else {
+            System.out.println("Cart is empty.\n");
+        }
+    }
+
+    public void clearCart() {
+        cartList.clear();
     }
 }
