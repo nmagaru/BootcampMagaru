@@ -9,8 +9,8 @@ public class Main {
         List<Product> productList = FileLoader.readFile();
         ShoppingCart userCart = new ShoppingCart();
 
-        UserInterface.displayMenu(productList);
-        //do I pass in the products and cart into displayMenu()?
-        //and then use those in displayMenu, calling and passing those lists into ProductRepository methods?
+        UserInterface.displayMenu(productList, userCart);
+        //TODO: do I pass in the products and cart into displayMenu()?
+        //TODO: and then use those in displayMenu, calling and passing those lists into ProductRepository methods?
     }
 }

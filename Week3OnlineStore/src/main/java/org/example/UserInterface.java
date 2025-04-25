@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class UserInterface {
     //OPTIONAL: handle all menus
-    public static void displayMenu(List<Product> products) {
+    public static void displayMenu(List<Product> products, ShoppingCart cart) {
         Scanner scanner = new Scanner(System.in);
         int selection;
 
@@ -69,6 +69,8 @@ public class UserInterface {
                     break;
                 case 5:
                     //add to cart
+                    //TODO: which property is it using?
+                    System.out.println("Enter ??? ");
                     break;
                 case 6:
                     //remove from cart
