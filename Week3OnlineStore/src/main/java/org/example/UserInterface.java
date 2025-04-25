@@ -70,7 +70,7 @@ public class UserInterface {
                     scanner.nextLine();
 
                     List<Product> priceResult = ProductRepository.findByProperty(products, "", minPrice, maxPrice, "price");
-                    if (priceResult != null) {
+                    if (!priceResult.isEmpty()) {
                         ProductRepository.displayProducts(priceResult);
                     }
                     else {
@@ -84,7 +84,7 @@ public class UserInterface {
                     String searchName = scanner.nextLine();
 
                     List<Product> nameResult = ProductRepository.findByProperty(products, searchName, 0, 0, "name");
-                    if (nameResult != null) {
+                    if (!nameResult.isEmpty()) {
                         ProductRepository.displayProducts(nameResult);
                     }
                     else {

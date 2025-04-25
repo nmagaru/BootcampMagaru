@@ -46,12 +46,6 @@ public class ProductRepository {
             }
         }
 
-        if (!matches.isEmpty()) {
-            return matches;
-        }
-        else {
-            return null;
-        }
-
+        return matches;
     }
 }
