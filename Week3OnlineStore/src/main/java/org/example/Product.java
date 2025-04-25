@@ -44,14 +44,4 @@ public class Product {
     public void setDepartment(String department) {
         this.department = department;
     }
-
-    @Override
-    public String toString() {
-        return "Product{" +
-                "sku='" + sku + '\'' +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                ", department='" + department + '\'' +
-                '}';
-    }
 }
