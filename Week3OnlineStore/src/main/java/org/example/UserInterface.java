@@ -41,12 +41,31 @@ public class UserInterface {
                     break;
                 case 2:
                     //search by sku
+                    System.out.print("Search for this product SKU: ");
+                    String searchSKU = scanner.nextLine();
+
+                    List<Product> skuResult = ProductRepository.findByProperty(products, searchSKU, 0, 0, "sku");
+                    ProductRepository.displayProducts(skuResult);
                     break;
                 case 3:
                     //search by price range
+                    System.out.println("Search within these product prices:");
+                    System.out.print("Minimum price: ");
+                    double minPrice = scanner.nextDouble();
+                    System.out.print("Maximum price: ");
+                    double maxPrice = scanner.nextDouble();
+                    scanner.nextLine();
+
+                    List<Product> priceResult = ProductRepository.findByProperty(products, "", minPrice, maxPrice, "price");
+                    ProductRepository.displayProducts(priceResult);
                     break;
                 case 4:
                     //search by name
+                    System.out.print("Search for this product name: ");
+                    String searchName = scanner.nextLine();
+
+                    List<Product> nameResult = ProductRepository.findByProperty(products, searchName, 0, 0, "name");
+                    ProductRepository.displayProducts(nameResult);
                     break;
                 case 5:
                     //add to cart
