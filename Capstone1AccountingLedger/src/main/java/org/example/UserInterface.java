@@ -31,29 +31,96 @@ public class UserInterface {
 
             switch (selection) {
                 case 1:
-                    System.out.print("Enter your deposit amount: ");
-                    double amount = 0.0;
-                    try {
-                        String amountAsString = scanner.nextLine();
-                        amount = Double.parseDouble(amountAsString);
-                    } catch (Exception ex) {
-                        System.out.println("Invalid input, please type the amount in the form XX.XX.");
+                    //enter date
+                    System.out.print("Enter the deposit date in the format 'yyyy-mm-dd', or 'today' for current date: ");
+                    String depositDate = scanner.nextLine();
+                    LocalDate parsedDepositDate = TransactionRepository.getDate(depositDate);
+                    if (parsedDepositDate == null) {
                         break;
                     }
-                    if (amount < 0.0) {
+
+                    //enter time
+                    System.out.print("Enter the deposit time in the format 'hh:mm:ss', or 'now' for current time: ");
+                    String depositTime = scanner.nextLine();
+                    LocalTime parsedDepositTime = TransactionRepository.getTime(depositTime);
+                    if (parsedDepositTime == null) {
+                        break;
+                    }
+
+                    //enter description
+                    System.out.print("Enter a deposit description: ");
+                    String depositDescription = scanner.nextLine();
+
+                    //enter vendor
+                    System.out.print("Enter the deposit vendor: ");
+                    String depositVendor = scanner.nextLine();
+
+                    //enter amount
+                    System.out.print("Enter your deposit amount: ");
+                    double depositAmount = 0.0;
+                    //check if input is double
+                    try {
+                        String amountAsString = scanner.nextLine();
+                        depositAmount = Double.parseDouble(amountAsString);
+                    } catch (Exception ex) {
+                        System.out.println("Invalid input, please type the amount in the format XX.XX.");
+                        break;
+                    }
+                    //check if input is positive
+                    if (depositAmount < 0.0) {
                         System.out.println("Deposit amount must be of positive value.");
                         break;
                     }
 
-                    System.out.print("Enter a deposit description: ");
-                    String description = scanner.nextLine();
-
-                    System.out.println("Enter the deposit vendor: ");
-                    String vendor = scanner.nextLine();
-
-                    TransactionRepository.addTransaction(description, vendor, amount);
+                    TransactionRepository.addTransaction(
+                            parsedDepositDate,
+                            parsedDepositTime,
+                            depositDescription,
+                            depositVendor,
+                            depositAmount);
                     break;
                 case 2:
+                    //enter date
+                    System.out.print("Enter the payment date in the format 'yyyy-mm-dd', or 'today' for current date: ");
+                    String paymentDate = scanner.nextLine();
+                    LocalDate parsedPaymentDate = TransactionRepository.getDate(paymentDate);
+                    if (parsedPaymentDate == null) {
+                        break;
+                    }
+
+                    //enter time
+                    System.out.print("Enter the payment time in the format 'hh:mm:ss', or 'now' for current time: ");
+                    String paymentTime = scanner.nextLine();
+                    LocalTime parsedPaymentTime = TransactionRepository.getTime(paymentTime);
+                    if (parsedPaymentTime == null) {
+                        break;
+                    }
+
+                    //enter description
+                    System.out.print("Enter a payment description: ");
+                    String paymentDescription = scanner.nextLine();
+
+                    //enter vendor
+                    System.out.print("Enter the payment vendor: ");
+                    String paymentVendor = scanner.nextLine();
+
+                    //enter amount
+                    System.out.print("Enter your payment amount: ");
+                    double paymentAmount = 0.0;
+                    //check if input is double
+                    try {
+                        String amountAsString = scanner.nextLine();
+                        paymentAmount = Double.parseDouble(amountAsString);
+                    } catch (Exception ex) {
+                        System.out.println("Invalid input, please type the amount in the format XX.XX.");
+                        break;
+                    }
+                    //check if input is positive, set negative if so
+                    if (paymentAmount > 0.0) {
+                        paymentAmount *= -1;
+                    }
+
+                    TransactionRepository.addTransaction(parsedPaymentDate, parsedPaymentTime, paymentDescription, paymentVendor, paymentAmount);
                     break;
                 case 3:
                     break;

@@ -21,11 +21,11 @@ public class FileManager {
             if (!fileExists) {
                 try {
                     if (file.createNewFile()) {
-                        System.out.println("File created: " + file.getName());
+                        //System.out.println("File created: " + file.getName());
                     }
-                } catch (IOException e) {
+                } catch (IOException ex) {
                     System.out.println("File could not be created.");
-                    e.printStackTrace();
+                    ex.printStackTrace();
                 }
             }
 
@@ -43,9 +43,9 @@ public class FileManager {
             //close writer
             writer.close();
 
-        } catch (IOException e) {
+        } catch (IOException ex) {
             System.out.println("Transaction could not be written to file.");
-            e.printStackTrace();
+            ex.printStackTrace();
         }
     }
 }
