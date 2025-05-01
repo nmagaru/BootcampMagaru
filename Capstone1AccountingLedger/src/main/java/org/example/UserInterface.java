@@ -123,6 +123,16 @@ public class UserInterface {
                     TransactionRepository.addTransaction(parsedPaymentDate, parsedPaymentTime, paymentDescription, paymentVendor, paymentAmount);
                     break;
                 case 3:
+                    System.out.println("Select a ledger display option: ");
+                    System.out.println("ALL\t\t -\t All transactions");
+                    System.out.println("DEPOSIT\t -\t All deposits");
+                    System.out.println("PAYMENT\t -\t All payments");
+                    System.out.print("Your selection: ");
+
+                    String displaySelection = scanner.nextLine();
+                    if (!LedgerRepository.displayTransactions(displaySelection)) {
+                        System.out.println("Invalid input, please select one of the above values.");
+                    }
                     break;
                 case 4:
                     System.exit(0);

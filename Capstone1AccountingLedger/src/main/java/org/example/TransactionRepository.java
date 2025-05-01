@@ -16,7 +16,7 @@ public class TransactionRepository {
             try {
                 return LocalDate.parse(date, dateFormatter);
             } catch (Exception ex) {
-                System.out.println("Date is incorrectly formatted.");
+                System.out.println("Date is incorrectly formatted or is invalid.");
                 return null;
             }
         }
@@ -26,14 +26,14 @@ public class TransactionRepository {
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         if (time.equalsIgnoreCase("now")) {
-            return LocalTime.now();
+            return LocalTime.now().withNano(0);
         }
         else {
             //check if input is correct date format
             try {
                 return LocalTime.parse(time, timeFormatter);
             } catch (Exception ex) {
-                System.out.println("Time is incorrectly formatted.");
+                System.out.println("Time is incorrectly formatted or is invalid.");
                 return null;
             }
         }
