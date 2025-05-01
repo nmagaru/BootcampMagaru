@@ -1,11 +1,9 @@
 date|time|description|vendor|amount
-2025-05-01|11:17:01|gift|chase|60.12
-2025-05-01|10:10:10|paycheck|adp|600.99
-1999-12-12|11:18:57|stock|govt|1000.90
-2050-12-12|12:12:12|future retirement|chase|30000.12
-2025-05-01|11:20:52|rent|apartment|-1500.00
-2025-05-01|10:10:10|food|partner|-50.89
-2000-12-12|11:22:03|investment|govt|-100.00
-2025-02-02|19:19:19|movie|friend|-20.12
-2025-05-01|11:23:37|test deposit|vendor|121.00
-2025-05-01|11:23:57|test payment'|vendor|-20.30
+2025-05-01|14:18:41|test current month deposit|test|100.00
+2025-05-01|14:19:35|test current month payment|test|-150.00
+2025-01-01|14:27:57|test current year deposit|test|200.00
+2025-01-03|14:28:34|test current year payment|test|-1000.00
+2025-04-03|14:31:02|test previous month deposit|test|200.00
+2025-04-03|14:31:35|test previous month payment|test|-50.00
+2024-05-01|14:33:20|test previous year deposit|test|1000.00
+2024-05-06|14:33:48|test previous year payment|test|-1000.00

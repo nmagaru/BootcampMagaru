@@ -2,6 +2,7 @@ package org.example;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
@@ -25,7 +26,7 @@ public class UserInterface {
                 String selectionAsString = scanner.nextLine();
                 selection = Integer.parseInt(selectionAsString);
             } catch (Exception ex) {
-                System.out.println("Invalid input, please type the number listed for your option.\n");
+                System.out.println("Invalid input, please type the number listed for your option.");
                 continue;
             }
 
@@ -123,15 +124,51 @@ public class UserInterface {
                     TransactionRepository.addTransaction(parsedPaymentDate, parsedPaymentTime, paymentDescription, paymentVendor, paymentAmount);
                     break;
                 case 3:
-                    System.out.println("Select a ledger display option: ");
-                    System.out.println("ALL\t\t -\t All transactions");
-                    System.out.println("DEPOSIT\t -\t All deposits");
-                    System.out.println("PAYMENT\t -\t All payments");
-                    System.out.print("Your selection: ");
+                    while (true) {
+                        System.out.println("\nSelect a ledger display option: ");
+                        System.out.println("ALL\t\t -\t All transactions");
+                        System.out.println("DEPOSIT\t -\t All deposits");
+                        System.out.println("PAYMENT\t -\t All payments");
+                        System.out.println("REPORT\t -\t Generate a report");
+                        System.out.println("HOME\t -\t Go back to home screen");
+                        System.out.print("Your selection: ");
 
-                    String displaySelection = scanner.nextLine();
-                    if (!LedgerRepository.displayTransactions(displaySelection)) {
-                        System.out.println("Invalid input, please select one of the above values.");
+                        String displaySelection = scanner.nextLine();
+                        if (displaySelection.equalsIgnoreCase("home")) {
+                            break;
+                        }
+                        else if (displaySelection.equalsIgnoreCase("report")) {
+                            System.out.println("\nSelect a report timeframe: ");
+                            System.out.println("MTD\t\t -\t Beginning of the current month -> today");
+                            System.out.println("YTD\t\t -\t Beginning of the current year -> today");
+                            System.out.println("PREVMON\t -\t Previous month");
+                            System.out.println("PREVYR\t -\t Previous year");
+                            System.out.println("BACK\t -\t Go back to ledger screen");
+                            System.out.print("Your selection: ");
+
+                            String reportSelection = scanner.nextLine();
+                            if (reportSelection.equalsIgnoreCase("back")) {
+                                continue;
+                            }
+
+                            List<Transaction> report = LedgerRepository.createReport(reportSelection);
+                            double reportTotal = 0.0;
+
+                            if (report.isEmpty()) {
+                                System.out.println("No transactions were found.");
+                            }
+                            else {
+                                for (Transaction transaction : report) {
+                                    System.out.println(transaction.toString());
+                                    reportTotal += transaction.getAmount();
+                                }
+
+                                System.out.printf("Total (%d transaction(s)): %.2f\n", report.size(), reportTotal);
+                            }
+                        }
+                        else if (!LedgerRepository.displayTransactions(displaySelection)) {
+                            System.out.println("Invalid input, please select one of the above options.");
+                        }
                     }
                     break;
                 case 4:
