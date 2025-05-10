@@ -11,7 +11,7 @@ public class DealershipFileManager {
         String[] properties;
 
         try {
-            System.out.println("Loading csv file...");
+            //System.out.println("Loading csv file...");
 
             FileReader fileReader = new FileReader("src/main/resources/inventory.csv");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
