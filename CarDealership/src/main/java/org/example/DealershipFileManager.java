@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class DealershipFileManager {
-    public Dealership getDealership() {
+    public static Dealership getDealership() {
         String input;
         String[] properties;
 
@@ -42,8 +42,8 @@ public class DealershipFileManager {
             bufferedReader.close();
 
             return dealership;
-
-        } catch(IOException ex) {
+        }
+        catch(IOException ex) {
             System.out.println("Failed to load csv file.");
             ex.printStackTrace();
             return null;
