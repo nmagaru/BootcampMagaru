@@ -1,9 +1,6 @@
 package org.example;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class DealershipFileManager {
     public static Dealership getDealership() {
@@ -50,7 +47,52 @@ public class DealershipFileManager {
         }
     }
 
-    public void saveDealership(Dealership dealership) {
+    public static void saveDealership(Dealership dealership) {
+        String filePath = "src/main/resources/inventory.csv";
+        File file = new File(filePath);
 
+        try {
+            File folder = file.getParentFile();
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            if (file.delete()) {
+                try {
+                    file.createNewFile();
+                }
+                catch(IOException ex) {
+                    System.out.println("File could not be created.");
+                    ex.printStackTrace();;
+                }
+            }
+
+            FileWriter writer = new FileWriter(file, true);
+
+            writer.write(
+                dealership.getName() + "|" +
+                    dealership.getAddress() + "|" +
+                    dealership.getPhone() + "\n"
+            );
+
+            for (Vehicle vehicle : dealership.getAllVehicles()) {
+                writer.write(
+                    vehicle.getVin() + "|" +
+                        vehicle.getYear() + "|" +
+                        vehicle.getMake() + "|" +
+                        vehicle.getModel() + "|" +
+                        vehicle.getVehicleType() + "|" +
+                        vehicle.getColor() + "|" +
+                        vehicle.getOdometer() + "|" +
+                        vehicle.getPrice() + "\n"
+                );
+            }
+
+            writer.close();
+        }
+        catch (IOException e) {
+            System.out.println("File could not be recreated.");
+            e.printStackTrace();
+        }
     }
 }

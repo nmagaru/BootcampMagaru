@@ -195,10 +195,68 @@ public class UserInterface {
     }
 
     private static void processAddVehicleRequest() {
+        Scanner scanner = new Scanner(System.in);
+        int userVin, userYear, userMileage;
+        String userMake, userModel, userVehicleType, userColor;
+        double userPrice;
 
+        try {
+            System.out.print("\nEnter your vehicle's identification number: ");
+            userVin = Integer.parseInt(scanner.nextLine());
+            System.out.print("Enter your vehicle's year: ");
+            userYear = Integer.parseInt(scanner.nextLine());
+            System.out.print("Enter your vehicle's make: ");
+            userMake = scanner.nextLine();
+            System.out.print("Enter your vehicle's model: ");
+            userModel = scanner.nextLine();
+            System.out.print("Enter your vehicle's type: ");
+            userVehicleType = scanner.nextLine();
+            System.out.print("Enter your vehicle's color: ");
+            userColor = scanner.nextLine();
+            System.out.print("Enter your vehicle's mileage: ");
+            userMileage = Integer.parseInt(scanner.nextLine());
+            System.out.print("Enter your vehicle's price: ");
+            userPrice = Double.parseDouble(scanner.nextLine());
+        }
+        catch (Exception e) {
+            System.out.println("Please enter a valid value corresponding to that vehicle property.\n");
+            return;
+        }
+
+        Vehicle userVehicle = new Vehicle(userVin, userYear, userMake, userModel, userVehicleType, userColor, userMileage, userPrice);
+        dealership.addVehicle(userVehicle);
+        DealershipFileManager.saveDealership(dealership);
     }
 
     private static void processRemoveVehicleRequest() {
+        Scanner scanner = new Scanner(System.in);
+        int userRemoveVin;
 
+        try {
+            System.out.print("\nEnter your vehicle's identification number: ");
+            userRemoveVin = Integer.parseInt(scanner.nextLine());
+        }
+        catch (Exception ex) {
+            System.out.println("Please enter a valid identification number.\n");
+            return;
+        }
+
+
+        Vehicle removeVehicle = null;
+        for (Vehicle vehicle : dealership.getAllVehicles()) {
+            if (vehicle.getVin() == userRemoveVin) {
+                removeVehicle = vehicle;
+                break;
+            }
+        }
+
+        if (removeVehicle != null) {
+            dealership.removeVehicle(removeVehicle);
+            DealershipFileManager.saveDealership(dealership);
+            System.out.println("Vehicle successfully removed.");
+        }
+        else {
+            System.out.println("Vehicle not found.\n");
+        }
     }
 }
