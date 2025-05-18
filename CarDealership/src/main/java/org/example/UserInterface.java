@@ -241,7 +241,6 @@ public class UserInterface {
             return;
         }
 
-
         Vehicle removeVehicle = null;
         for (Vehicle vehicle : dealership.getAllVehicles()) {
             if (vehicle.getVin() == userRemoveVin) {
