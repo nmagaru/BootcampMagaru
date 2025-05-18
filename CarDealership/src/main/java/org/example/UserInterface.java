@@ -17,6 +17,7 @@ public class UserInterface {
 
         Scanner scanner = new Scanner(System.in);
         int selection;
+        String userPassword, password = "drowssap";
 
         while(true) {
             displayMenu();
@@ -63,6 +64,18 @@ public class UserInterface {
                 case 99:
                     System.out.println("Quitting...");
                     System.exit(0);
+                case 100:
+                    System.out.print("Enter your admin password: ");
+                    userPassword = scanner.nextLine();
+
+                    if (userPassword.equals(password)) {
+                        AdminUserInterface.display();
+                    }
+                    else {
+                        System.out.println("Incorrect password.\n");
+                    }
+
+                    break;
                 default:
                     break;
             }
@@ -107,6 +120,7 @@ public class UserInterface {
         System.out.println("9 - Remove a vehicle");
         System.out.println("10 - Sell/Lease a vehicle");
         System.out.println("99 - Quit");
+        System.out.println("100 - Admin commands");
         System.out.print("Your selection: ");
     }
 
