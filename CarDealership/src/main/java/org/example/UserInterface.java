@@ -1,5 +1,7 @@
 package org.example;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -55,6 +57,9 @@ public class UserInterface {
                 case 9:
                     processRemoveVehicleRequest();
                     break;
+                case 10:
+                    processSellLeaseVehicleRequest();
+                    break;
                 case 99:
                     System.out.println("Quitting...");
                     System.exit(0);
@@ -100,6 +105,7 @@ public class UserInterface {
         System.out.println("7 - List ALL vehicles");
         System.out.println("8 - Add a vehicle");
         System.out.println("9 - Remove a vehicle");
+        System.out.println("10 - Sell/Lease a vehicle");
         System.out.println("99 - Quit");
         System.out.print("Your selection: ");
     }
@@ -241,13 +247,7 @@ public class UserInterface {
             return;
         }
 
-        Vehicle removeVehicle = null;
-        for (Vehicle vehicle : dealership.getAllVehicles()) {
-            if (vehicle.getVin() == userRemoveVin) {
-                removeVehicle = vehicle;
-                break;
-            }
-        }
+        Vehicle removeVehicle = dealership.getVehicleByVin(userRemoveVin);
 
         if (removeVehicle != null) {
             dealership.removeVehicle(removeVehicle);
@@ -256,6 +256,94 @@ public class UserInterface {
         }
         else {
             System.out.println("Vehicle not found.\n");
+        }
+    }
+
+    private static void processSellLeaseVehicleRequest() {
+        Scanner scanner = new Scanner(System.in);
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+        String todayString = today.format(dateFormatter);
+        String userName, userEmail, userSellOrLease, userFinance;
+        int userRemoveVin;
+        boolean isFinanced;
+
+        try {
+            System.out.print("\nEnter your name: ");
+            userName = scanner.nextLine();
+            System.out.print("Enter your email: ");
+            userEmail = scanner.nextLine();
+            System.out.print("Enter the vehicle's identification number to sell/lease: ");
+            userRemoveVin = Integer.parseInt(scanner.nextLine());
+        }
+        catch (Exception ex) {
+            System.out.println("Please enter a valid identification number.\n");
+            return;
+        }
+
+        Vehicle sellLeaseVehicle = dealership.getVehicleByVin(userRemoveVin);
+
+        if (sellLeaseVehicle != null) {
+            System.out.print("Would you like to SELL or LEASE this vehicle? (Please type your selection): ");
+            userSellOrLease = scanner.nextLine();
+
+            if (userSellOrLease.equalsIgnoreCase("sell")) {
+                System.out.print("Would you like to finance this vehicle? (Y/N): ");
+                userFinance = scanner.nextLine();
+
+                if (userFinance.equalsIgnoreCase("y")) {
+                    isFinanced = true;
+                }
+                else if (userFinance.equalsIgnoreCase("n")) {
+                    isFinanced = false;
+                }
+                else {
+                    System.out.println("Please enter 'Y' or 'N'.\n");
+                    return;
+                }
+
+                SalesContract salesContract = new SalesContract(
+                        todayString,
+                        userName,
+                        userEmail,
+                        sellLeaseVehicle,
+                        isFinanced
+                );
+
+                System.out.println("Total price: " + String.format("%.2f", salesContract.getTotalPrice()));
+                System.out.println("Monthly payment: " + String.format("%.2f", salesContract.getMonthlyPayment()));
+                ContractDataManager.saveContract(salesContract);
+            }
+            else if (userSellOrLease.equalsIgnoreCase("lease")) {
+                if (today.getYear() - sellLeaseVehicle.getYear() > 3) {
+                    System.out.println("Vehicle is too old to lease. Please select another vehicle.\n");
+                    return;
+                }
+                else {
+                    LeaseContract leaseContract = new LeaseContract(
+                            todayString,
+                            userName,
+                            userEmail,
+                            sellLeaseVehicle
+                    );
+
+                    System.out.println("Total price: " + String.format("%.2f", leaseContract.getTotalPrice()));
+                    System.out.println("Monthly payment: " + String.format("%.2f", leaseContract.getMonthlyPayment()));
+                    ContractDataManager.saveContract(leaseContract);
+                }
+            }
+            else {
+                System.out.println("Please enter 'sell' or 'lease'.\n");
+                return;
+            }
+
+            dealership.removeVehicle(sellLeaseVehicle);
+            DealershipFileManager.saveDealership(dealership);
+            System.out.println("Contract successfully created.\n");
+        }
+        else {
+            System.out.println("Vehicle not found.\n");
+            return;
         }
     }
 }
