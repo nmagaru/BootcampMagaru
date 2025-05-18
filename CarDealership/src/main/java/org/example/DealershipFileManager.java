@@ -76,16 +76,7 @@ public class DealershipFileManager {
             );
 
             for (Vehicle vehicle : dealership.getAllVehicles()) {
-                writer.write(
-                    vehicle.getVin() + "|" +
-                        vehicle.getYear() + "|" +
-                        vehicle.getMake() + "|" +
-                        vehicle.getModel() + "|" +
-                        vehicle.getVehicleType() + "|" +
-                        vehicle.getColor() + "|" +
-                        vehicle.getOdometer() + "|" +
-                        vehicle.getPrice() + "\n"
-                );
+                writer.write(vehicle.toString() + "\n");
             }
 
             writer.close();
