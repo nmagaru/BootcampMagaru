@@ -204,7 +204,7 @@ public class UserInterface {
         Scanner scanner = new Scanner(System.in);
         String userVehicleType;
 
-        System.out.print("\nEnter a color: ");
+        System.out.print("\nEnter a vehicle type: ");
         userVehicleType = scanner.nextLine();
 
         displayVehicles(dealership.getVehiclesByType(userVehicleType));
