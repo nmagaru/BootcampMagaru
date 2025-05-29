@@ -10,6 +10,13 @@ public class Sandwich {
     private List<Topping> toppings;
     private boolean toasted;
 
+    public Sandwich() {
+        this.bread = null;
+        this.size = 0;
+        this.toasted = false;
+
+        this.toppings = new ArrayList<>();
+    }
 
     public Sandwich(Topping bread, int size, boolean toasted) {
         this.bread = bread;
@@ -58,8 +65,8 @@ public class Sandwich {
                 .anyMatch(topping -> type.equalsIgnoreCase(topping.getType()));
     }
 
-    public void addTopping(String type, String name) {
-        Topping topping = new Topping(type, name);
+    public void addTopping(Topping topping) {
+        String type = topping.getType();
         BigDecimal size = BigDecimal.valueOf(this.size);
         BigDecimal addCost;
 

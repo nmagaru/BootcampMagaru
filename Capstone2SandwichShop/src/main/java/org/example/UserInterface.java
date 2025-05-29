@@ -146,20 +146,15 @@ public class UserInterface {
         //add toppings to sandwich
         System.out.println("\n[Toppings]");
         OrderRepository.enterToppings("meat")
-                .forEach(topping ->
-                        sandwich.addTopping(topping.getType(), topping.getName()));
+                .forEach(sandwich::addTopping);
         OrderRepository.enterToppings("cheese")
-                .forEach(topping ->
-                        sandwich.addTopping(topping.getType(), topping.getName()));
+                .forEach(sandwich::addTopping);
         OrderRepository.enterToppings("other toppings")
-                .forEach(topping ->
-                        sandwich.addTopping(topping.getType(), topping.getName()));
+                .forEach(sandwich::addTopping);
         OrderRepository.enterToppings("sauce")
-                .forEach(topping ->
-                        sandwich.addTopping(topping.getType(), topping.getName()));
+                .forEach(sandwich::addTopping);
         OrderRepository.enterToppings("sides")
-                .forEach(topping ->
-                        sandwich.addTopping(topping.getType(), topping.getName()));
+                .forEach(sandwich::addTopping);
         order.addSandwich(sandwich);
     }
 

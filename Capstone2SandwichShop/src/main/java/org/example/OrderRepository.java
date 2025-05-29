@@ -195,6 +195,7 @@ public class OrderRepository {
         List<Sandwich> sandwiches = order.getSandwiches();
         String sandwichSize = "";
         String sandwichToasted = "";
+        String currentToppingType = "";
         String returnString = "";
 
         if (!sandwiches.isEmpty()) {
@@ -235,7 +236,13 @@ public class OrderRepository {
                         "\tToppings:" +  "\n";
 
                 for (Topping topping : sandwiches.get(i).getToppings()) {
-                    returnString += "\t\t\t-" + topping.getName() + "\n";
+                    if (!currentToppingType.equalsIgnoreCase(topping.getType())) {
+                        currentToppingType = topping.getType();
+                        returnString += "\t\t" + currentToppingType + ":\n";
+                    }
+
+                    returnString += "\t\t\t" +
+                            "" + topping.getName() + "\n";
                 }
             }
 
