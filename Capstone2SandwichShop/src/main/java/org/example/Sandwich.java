@@ -60,11 +60,14 @@ public class Sandwich {
     }
 
 
+    //custom functions
+    //helper, check if topping  is already in list
     public boolean toppingTypeInList(String type) {
         return toppings.stream()
                 .anyMatch(topping -> type.equalsIgnoreCase(topping.getType()));
     }
 
+    //add topping to sandwich
     public void addTopping(Topping topping) {
         String type = topping.getType();
         BigDecimal size = BigDecimal.valueOf(this.size);
@@ -99,6 +102,7 @@ public class Sandwich {
         toppings.add(topping);
     }
 
+    //clear toppings
     public void clearToppings() {
         toppings.clear();
     }

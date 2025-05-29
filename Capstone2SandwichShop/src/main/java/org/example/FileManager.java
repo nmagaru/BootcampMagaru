@@ -22,6 +22,7 @@ public class FileManager {
                 choices = new ArrayList<String>(Arrays.asList(input.split("\\|")));
 
                 if (choiceType.equalsIgnoreCase(choices.get(0))) {
+                    //remove choice type from search list
                     choices.remove(0);
 
                     bufferedReader.close();
@@ -41,11 +42,13 @@ public class FileManager {
     public static void createReceipt(Order order) {
         String filePath = "src/main/resources/Receipts/";
 
+        //get current date/time, format for file name
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hhmmss");
         String today = LocalDate.now().format(dateFormatter);
         String now = LocalTime.now().format(timeFormatter);
 
+        //create full file name
         filePath += today + "-" + now + ".txt";
         File file = new File(filePath);
 
@@ -74,6 +77,7 @@ public class FileManager {
             //write to file
             FileWriter writer = new FileWriter(file, true);
 
+            //write functions modified to work for both ui and receipt file
             writer.write(OrderRepository.writeSandwiches(order));
             writer.write("\n");
             writer.write(OrderRepository.writeDrinks(order));

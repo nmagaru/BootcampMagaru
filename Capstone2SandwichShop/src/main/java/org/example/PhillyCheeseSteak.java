@@ -5,6 +5,7 @@ import java.util.List;
 
 public class PhillyCheeseSteak extends Sandwich{
     public PhillyCheeseSteak() {
+        //set philly values by default
         setSize(1);
         setToasted(true);
 

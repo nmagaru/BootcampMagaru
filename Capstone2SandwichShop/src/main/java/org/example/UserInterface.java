@@ -23,10 +23,8 @@ public class UserInterface {
         Scanner scanner = new Scanner(System.in);
         int selectionHome;
 
-        //infinite loop to handle functionality
         System.out.println("Welcome to DELI-cious!");
         while (true) {
-            //home screen
             displayHomeScreen();
 
             //check if user selection is an integer
@@ -86,14 +84,12 @@ public class UserInterface {
     }
 
 
-    //processing methods
+    //processing functions
     private static void processOrderRequest() {
         Scanner scanner = new Scanner(System.in);
         int selectionOrder;
 
-        //infinite loop to handle functionality
         while (true) {
-            //order screen
             displayOrderScreen();
 
             //check if user selection is an integer
@@ -140,7 +136,7 @@ public class UserInterface {
         System.out.println("----------------------------");
         Scanner scanner = new Scanner(System.in);
 
-        //prompt user for signature or not
+        //prompt user for signature or from scratch
         System.out.print("Signature sandwich, or from scratch? (signature/scratch) ");
         String createInput = scanner.nextLine();
 
@@ -148,12 +144,15 @@ public class UserInterface {
             System.out.println();
             String userSignature = OrderRepository.enterOption("signature");
 
+            //prompt user for signature choice
             if (userSignature.equalsIgnoreCase("blt")) {
                 BLT blt = new BLT();
 
+                //update bread cost
                 BigDecimal bltSizeBD = BigDecimal.valueOf(blt.getSize());
                 blt.getBread().addToCost(bltSizeBD.multiply(BigDecimal.valueOf(1.50)));
 
+                //pass in existing toppings, add all updated toppings to list
                 List<Topping> newToppings = new ArrayList<>();
                 for (String type : TOPPING_TYPES) {
                     newToppings.addAll(OrderRepository.updateToppings(
@@ -161,6 +160,7 @@ public class UserInterface {
                     ));
                 }
 
+                //rewrite existing toppings
                 blt.clearToppings();
                 newToppings.forEach(blt::addTopping);
 
@@ -169,9 +169,11 @@ public class UserInterface {
             else if (userSignature.equalsIgnoreCase("philly cheesesteak")) {
                 PhillyCheeseSteak philly = new PhillyCheeseSteak();
 
+                //update bread cost
                 BigDecimal phillySizeBD = BigDecimal.valueOf(philly.getSize());
                 philly.getBread().addToCost(phillySizeBD.multiply(BigDecimal.valueOf(1.50)));
 
+                //pass in existing toppings, add all updated toppings to list
                 List<Topping> newToppings = new ArrayList<>();
                 for (String type : TOPPING_TYPES) {
                     newToppings.addAll(OrderRepository.updateToppings(
@@ -179,6 +181,7 @@ public class UserInterface {
                     ));
                 }
 
+                //rewrite existing toppings
                 philly.clearToppings();
                 newToppings.forEach(philly::addTopping);
 
@@ -195,7 +198,6 @@ public class UserInterface {
             BigDecimal userSizeBD = BigDecimal.valueOf(userSize);
             bread.addToCost(userSizeBD.multiply(BigDecimal.valueOf(1.50)));
 
-            //set toasted or not
             boolean userToasted = OrderRepository.enterToasted();
 
             //create sandwich from inputted values
@@ -204,7 +206,6 @@ public class UserInterface {
             //add toppings to sandwich
             System.out.println("\n[Toppings]");
             for (String type : TOPPING_TYPES) {
-                //OrderRepository.enterToppings(type).forEach(sandwich::addTopping);
                 OrderRepository.updateToppings(
                         type, null, false
                 ).forEach(sandwich::addTopping);

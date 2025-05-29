@@ -5,6 +5,7 @@ import java.util.List;
 
 public class BLT extends Sandwich{
     public BLT() {
+        //set blt values by default
         setSize(1);
         setToasted(true);
 

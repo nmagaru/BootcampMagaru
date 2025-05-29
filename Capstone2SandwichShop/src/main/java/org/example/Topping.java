@@ -58,7 +58,8 @@ public class Topping {
         this.cost = cost;
     }
 
-
+    //custom functions
+    //add to cost of topping
     public void addToCost(BigDecimal addCost) {
         cost = cost.add(addCost);
     }

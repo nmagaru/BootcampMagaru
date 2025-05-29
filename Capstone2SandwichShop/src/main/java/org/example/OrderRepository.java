@@ -60,7 +60,8 @@ public class OrderRepository {
     }
 
 
-    //process user input
+    //processing functions
+    //used for smaller, simpler selections
     public static String enterOption(String optionType) {
         Scanner scanner = new Scanner(System.in);
         String optionInput;
@@ -82,7 +83,7 @@ public class OrderRepository {
             System.out.printf("Choose your %s: ", optionType);
             optionInput = scanner.nextLine();
 
-            //check choices file if choice matches
+            //check choices file if choice is valid
             if (FileManager.findChoice(optionType, optionInput)) {
                 System.out.println();
                 return optionInput;
@@ -92,6 +93,7 @@ public class OrderRepository {
         }
     }
 
+    //used for size specifically due to int results
     public static int enterSize() {
         Scanner scanner = new Scanner(System.in);
         String sizeInput;
@@ -102,7 +104,6 @@ public class OrderRepository {
 
             System.out.print("Choose your size: ");
             sizeInput = scanner.nextLine();
-
 
             switch (sizeInput.toLowerCase()) {
                 case "small":
@@ -121,6 +122,7 @@ public class OrderRepository {
         }
     }
 
+    //used for specifically toasted due to boolean results
     public static boolean enterToasted() {
         Scanner scanner = new Scanner(System.in);
         String toastedInput;
@@ -141,125 +143,7 @@ public class OrderRepository {
         }
     }
 
-    public static String writeSandwiches(Order order) {
-        List<Sandwich> sandwiches = order.getSandwiches();
-        String sandwichSize = "";
-        String sandwichToasted = "";
-        String currentToppingType = "";
-        String returnString = "";
-
-        if (!sandwiches.isEmpty()) {
-            for (int i = 0; i < sandwiches.size(); i++) {
-                switch (sandwiches.get(i).getSize()) {
-                    case 0:
-                        sandwichSize = "4\"";
-                        break;
-                    case 1:
-                        sandwichSize = "8\"";
-                        break;
-                    case 2:
-                        sandwichSize = "12\"";
-                        break;
-                    default:
-                        break;
-                }
-
-                if (sandwiches.get(i).isToasted()) {
-                    sandwichToasted = "yes";
-                }
-                else {
-                    sandwichToasted = "no";
-                }
-
-                BigDecimal sandwichCost = BigDecimal.valueOf(0);
-                sandwichCost = sandwichCost.add(sandwiches.get(i).getBread().getCost());
-                for (Topping topping : sandwiches.get(i).getToppings()) {
-                    sandwichCost = sandwichCost.add(topping.getCost());
-                }
-                String sandwichCostString = String.format("%.2f", sandwichCost);
-
-                returnString +=
-                        "Sandwich #" + (i + 1) + " - $" + sandwichCostString + "\n" +
-                        "\tSize:\t\t" + sandwichSize + "\n" +
-                        "\tBread:\t\t" + sandwiches.get(i).getBread().getName() + "\n" +
-                        "\tToasted?:\t" + sandwichToasted + "\n" +
-                        "\tToppings:" +  "\n";
-
-                for (Topping topping : sandwiches.get(i).getToppings()) {
-                    if (!currentToppingType.equalsIgnoreCase(topping.getType())) {
-                        currentToppingType = topping.getType();
-                        returnString += "\t\t" + currentToppingType + ":\n";
-                    }
-
-                    returnString += "\t\t\t" +
-                            "" + topping.getName() + "\n";
-                }
-            }
-
-            return returnString;
-        }
-        else {
-            return "No sandwiches were purchased.\n";
-        }
-    }
-
-    public static String writeDrinks(Order order) {
-        List<Drink> drinks = order.getDrinks();
-        String drinkSize = "";
-        String returnString = "";
-
-        if (!drinks.isEmpty()) {
-            for (int i = 0; i < drinks.size(); i++) {
-                switch (drinks.get(i).getSize()) {
-                    case 0:
-                        drinkSize = "small";
-                        break;
-                    case 1:
-                        drinkSize = "medium";
-                        break;
-                    case 2:
-                        drinkSize = "large";
-                        break;
-                    default:
-                        break;
-                }
-
-                BigDecimal drinkCost = drinks.get(i).getCost();
-                String drinkCostString = String.format("%.2f", drinkCost);
-
-                returnString +=
-                        "Drink #" + (i + 1) + " - $" + drinkCostString + "\n" +
-                        "\tSize:\t" + drinkSize + "\n" +
-                        "\tFlavor:\t" + drinks.get(i).getFlavor() + "\n";
-            }
-
-            return returnString;
-        }
-        else {
-            return "No drinks were purchased.\n";
-        }
-    }
-
-    public static String writeChips(Order order) {
-        List<String> chips = order.getChips();
-        String returnString = "";
-
-        if (!chips.isEmpty()) {
-            BigDecimal chipsCost = BigDecimal.valueOf(chips.size() * 1.50);
-            String chipsCostString = String.format("%.2f", chipsCost);
-
-            returnString += "Chips - $" + chipsCostString + "\n";
-            for (String chip : chips) {
-                returnString += "\t" + chip + "\n";
-            }
-
-            return returnString;
-        }
-        else {
-            return "No chips were purchased.\n";
-        }
-    }
-
+    //used for topping management
     public static List<Topping> updateToppings(
             String toppingType,
             List<Topping> oldToppings,
@@ -271,6 +155,7 @@ public class OrderRepository {
         Topping topping;
         boolean isRemoved;
 
+        //handle one topping type at a time
         if (isSignature) {
             for (Topping searchTopping : oldToppings) {
                 if (toppingType.equalsIgnoreCase(searchTopping.getType())) {
@@ -344,7 +229,7 @@ public class OrderRepository {
             System.out.printf("Choose your %s: ", toppingType);
             toppingInput = scanner.nextLine();
 
-            //check choices file if topping input matches
+            //check choices file if choice is valid
             if (FileManager.findChoice(toppingType, toppingInput) ) {
                 if (updateInput.equalsIgnoreCase("add") || !isSignature) {
                     topping = new Topping(toppingType, toppingInput);
@@ -371,6 +256,135 @@ public class OrderRepository {
             else {
                 System.out.println("Please type one of the above options.\n");
             }
+        }
+    }
+
+
+    //display result functions (ui and receipt file)
+    public static String writeSandwiches(Order order) {
+        List<Sandwich> sandwiches = order.getSandwiches();
+        String sandwichSize = "";
+        String sandwichToasted = "";
+        String currentToppingType = "";
+        String returnString = "";
+
+        if (!sandwiches.isEmpty()) {
+            for (int i = 0; i < sandwiches.size(); i++) {
+                //set size according to ints
+                switch (sandwiches.get(i).getSize()) {
+                    case 0:
+                        sandwichSize = "4\"";
+                        break;
+                    case 1:
+                        sandwichSize = "8\"";
+                        break;
+                    case 2:
+                        sandwichSize = "12\"";
+                        break;
+                    default:
+                        break;
+                }
+
+                if (sandwiches.get(i).isToasted()) {
+                    sandwichToasted = "yes";
+                }
+                else {
+                    sandwichToasted = "no";
+                }
+
+                //add topping costs to total cost
+                BigDecimal sandwichCost = BigDecimal.valueOf(0);
+                sandwichCost = sandwichCost.add(sandwiches.get(i).getBread().getCost());
+                for (Topping topping : sandwiches.get(i).getToppings()) {
+                    sandwichCost = sandwichCost.add(topping.getCost());
+                }
+                String sandwichCostString = String.format("%.2f", sandwichCost);
+
+                //create display string
+                returnString +=
+                        "Sandwich #" + (i + 1) + " - $" + sandwichCostString + "\n" +
+                        "\tSize:\t\t" + sandwichSize + "\n" +
+                        "\tBread:\t\t" + sandwiches.get(i).getBread().getName() + "\n" +
+                        "\tToasted?:\t" + sandwichToasted + "\n" +
+                        "\tToppings:" +  "\n";
+
+                for (Topping topping : sandwiches.get(i).getToppings()) {
+                    //separate topping display by type
+                    if (!currentToppingType.equalsIgnoreCase(topping.getType())) {
+                        currentToppingType = topping.getType();
+                        returnString += "\t\t" + currentToppingType + ":\n";
+                    }
+
+                    returnString += "\t\t\t" +
+                            "" + topping.getName() + "\n";
+                }
+            }
+
+            return returnString;
+        }
+        else {
+            return "No sandwiches were purchased.\n";
+        }
+    }
+
+    public static String writeDrinks(Order order) {
+        List<Drink> drinks = order.getDrinks();
+        String drinkSize = "";
+        String returnString = "";
+
+        if (!drinks.isEmpty()) {
+            //set size according to ints
+            for (int i = 0; i < drinks.size(); i++) {
+                switch (drinks.get(i).getSize()) {
+                    case 0:
+                        drinkSize = "small";
+                        break;
+                    case 1:
+                        drinkSize = "medium";
+                        break;
+                    case 2:
+                        drinkSize = "large";
+                        break;
+                    default:
+                        break;
+                }
+
+                BigDecimal drinkCost = drinks.get(i).getCost();
+                String drinkCostString = String.format("%.2f", drinkCost);
+
+                //create display string
+                returnString +=
+                        "Drink #" + (i + 1) + " - $" + drinkCostString + "\n" +
+                        "\tSize:\t" + drinkSize + "\n" +
+                        "\tFlavor:\t" + drinks.get(i).getFlavor() + "\n";
+            }
+
+            return returnString;
+        }
+        else {
+            return "No drinks were purchased.\n";
+        }
+    }
+
+    public static String writeChips(Order order) {
+        List<String> chips = order.getChips();
+        String returnString = "";
+
+        if (!chips.isEmpty()) {
+            //all chips are the same price, regardless of size
+            BigDecimal chipsCost = BigDecimal.valueOf(chips.size() * 1.50);
+            String chipsCostString = String.format("%.2f", chipsCost);
+
+            //create return string
+            returnString += "Chips - $" + chipsCostString + "\n";
+            for (String chip : chips) {
+                returnString += "\t" + chip + "\n";
+            }
+
+            return returnString;
+        }
+        else {
+            return "No chips were purchased.\n";
         }
     }
 }
