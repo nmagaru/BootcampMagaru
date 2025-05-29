@@ -1,0 +1,19 @@
+Sandwich #1 - $10.50
+	Size:		8"
+	Bread:		white
+	Toasted?:	yes
+	Toppings:
+		meat:
+			steak
+		cheese:
+			american
+		other toppings:
+			peppers
+		sauce:
+			mayo
+
+No drinks were purchased.
+
+No chips were purchased.
+
+Total Price: $10.50

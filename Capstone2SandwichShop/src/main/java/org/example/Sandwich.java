@@ -98,4 +98,8 @@ public class Sandwich {
         topping.addToCost(addCost);
         toppings.add(topping);
     }
+
+    public void clearToppings() {
+        toppings.clear();
+    }
 }

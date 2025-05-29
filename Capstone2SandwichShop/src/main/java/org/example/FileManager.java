@@ -10,23 +10,23 @@ import java.util.Arrays;
 import java.util.List;
 
 public class FileManager {
-    public static boolean findIngredient(String ingredientType, String search) {
+    public static boolean findChoice(String choiceType, String search) {
         String input;
-        List<String> ingredients;
+        List<String> choices;
 
         try {
-            FileReader fileReader = new FileReader("src/main/resources/ingredients.csv");
+            FileReader fileReader = new FileReader("src/main/resources/choices.csv");
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while ((input = bufferedReader.readLine()) != null) {
-                ingredients = new ArrayList<String>(Arrays.asList(input.split("\\|")));
+                choices = new ArrayList<String>(Arrays.asList(input.split("\\|")));
 
-                if (ingredientType.equalsIgnoreCase(ingredients.get(0))) {
-                    ingredients.remove(0);
+                if (choiceType.equalsIgnoreCase(choices.get(0))) {
+                    choices.remove(0);
 
                     bufferedReader.close();
 
-                    return ingredients.stream().anyMatch(search::equalsIgnoreCase);
+                    return choices.stream().anyMatch(search::equalsIgnoreCase);
                 }
             }
 

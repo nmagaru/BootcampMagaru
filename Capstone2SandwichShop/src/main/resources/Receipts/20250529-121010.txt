@@ -1,0 +1,18 @@
+Sandwich #1 - $8.50
+	Size:		8"
+	Bread:		white
+	Toasted?:	yes
+	Toppings:
+		cheese:
+			cheddar
+		other toppings:
+			lettuce
+			tomato
+		sauce:
+			ranch
+
+No drinks were purchased.
+
+No chips were purchased.
+
+Total Price: $8.50

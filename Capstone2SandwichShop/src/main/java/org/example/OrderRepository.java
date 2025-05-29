@@ -54,6 +54,11 @@ public class OrderRepository {
         System.out.println("Lays\t|\tDoritos\t\t|\tRuffles\t\t|\tMiss Vickies");
     }
 
+    private static void displaySignatures() {
+        System.out.println("Signatures");
+        System.out.println("BLT\t\t|\tPhilly Cheesesteak");
+    }
+
 
     //process user input
     public static String enterOption(String optionType) {
@@ -70,12 +75,15 @@ public class OrderRepository {
             else if (optionType.equalsIgnoreCase("chips")) {
                 displayChips();
             }
+            else if (optionType.equalsIgnoreCase("signature")) {
+                displaySignatures();
+            }
 
             System.out.printf("Choose your %s: ", optionType);
             optionInput = scanner.nextLine();
 
-            //check ingredients file if bread input matches
-            if (FileManager.findIngredient(optionType, optionInput)) {
+            //check choices file if choice matches
+            if (FileManager.findChoice(optionType, optionInput)) {
                 System.out.println();
                 return optionInput;
             }
@@ -129,64 +137,6 @@ public class OrderRepository {
                 default:
                     System.out.println("Please type one of the previous options.\n");
                     break;
-            }
-        }
-    }
-
-    public static List<Topping> enterToppings(String toppingType) {
-        Scanner scanner = new Scanner(System.in);
-        String toppingInput, continueInput;
-        List<Topping> toppings = new ArrayList<>();
-        Topping topping;
-
-        while (true) {
-            //prompt user to add topping
-            System.out.printf("Add %s? (Y/N) ", toppingType);
-            continueInput = scanner.nextLine();
-
-            switch (continueInput.toUpperCase()) {
-                case "Y":
-                    break;
-                case "N":
-                    System.out.println();
-                    return toppings;
-                default:
-                    System.out.println("Please type one of the previous options.\n");
-                    continue;
-            }
-
-            //display ingredients based on type
-            switch (toppingType) {
-                case "meat":
-                    displayMeats();
-                    break;
-                case "cheese":
-                    displayCheese();
-                    break;
-                case "other toppings":
-                    displayOther();
-                    break;
-                case "sauce":
-                    displaySauces();
-                    break;
-                case "sides":
-                    displaySides();
-                    break;
-                default:
-                    break;
-            }
-
-            System.out.printf("Choose your %s: ", toppingType);
-            toppingInput = scanner.nextLine();
-
-            //check ingredients file if topping input matches
-            if (FileManager.findIngredient(toppingType, toppingInput)) {
-                topping = new Topping(toppingType, toppingInput);
-                toppings.add(topping);
-                System.out.println();
-            }
-            else {
-                System.out.println("Please type one of the above options.\n");
             }
         }
     }
@@ -307,6 +257,120 @@ public class OrderRepository {
         }
         else {
             return "No chips were purchased.\n";
+        }
+    }
+
+    public static List<Topping> updateToppings(
+            String toppingType,
+            List<Topping> oldToppings,
+            boolean isSignature
+    ) {
+        Scanner scanner = new Scanner(System.in);
+        String toppingInput, updateInput;
+        List<Topping> toppings = new ArrayList<>();
+        Topping topping;
+        boolean isRemoved;
+
+        if (isSignature) {
+            for (Topping searchTopping : oldToppings) {
+                if (toppingType.equalsIgnoreCase(searchTopping.getType())) {
+                    toppings.add(searchTopping);
+                }
+            }
+        }
+
+        while (true) {
+            isRemoved = false;
+
+            //prompt user if adding or removing (adding only if from scratch)
+            if (isSignature) {
+                System.out.printf("Add or Remove %s? ( add / remove / continue ) ", toppingType);
+                updateInput = scanner.nextLine();
+
+                switch (updateInput.toLowerCase()) {
+                    case "add":
+                        updateInput = "add";
+                        break;
+                    case "remove":
+                        updateInput = "remove";
+                        break;
+                    case "continue":
+                        System.out.println();
+                        return toppings;
+                    default:
+                        System.out.println("Please type one of the previous options.\n");
+                        continue;
+                }
+            }
+            else {
+                System.out.printf("Add %s? (Y/N) ", toppingType);
+                updateInput = scanner.nextLine();
+
+                switch (updateInput.toUpperCase()) {
+                    case "Y":
+                        break;
+                    case "N":
+                        System.out.println();
+                        return toppings;
+                    default:
+                        System.out.println("Please type one of the previous options.\n");
+                        continue;
+                }
+            }
+
+            //display ingredients based on type
+            if (updateInput.equalsIgnoreCase("add") || !isSignature) {
+                switch (toppingType) {
+                    case "meat":
+                        displayMeats();
+                        break;
+                    case "cheese":
+                        displayCheese();
+                        break;
+                    case "other toppings":
+                        displayOther();
+                        break;
+                    case "sauce":
+                        displaySauces();
+                        break;
+                    case "sides":
+                        displaySides();
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            System.out.printf("Choose your %s: ", toppingType);
+            toppingInput = scanner.nextLine();
+
+            //check choices file if topping input matches
+            if (FileManager.findChoice(toppingType, toppingInput) ) {
+                if (updateInput.equalsIgnoreCase("add") || !isSignature) {
+                    topping = new Topping(toppingType, toppingInput);
+                    toppings.add(topping);
+                }
+                else {
+                    for (Topping searchTopping : toppings) {
+                        if (toppingInput.equalsIgnoreCase(searchTopping.getName())) {
+                            toppings.remove(searchTopping);
+                            isRemoved = true;
+                            break;
+                        }
+                    }
+
+                    if (isRemoved) {
+                        System.out.println(toppingInput + " removed.");
+                    }
+                    else {
+                        System.out.println("Topping not found.");
+                    }
+                }
+                System.out.println();
+            }
+            else {
+                System.out.println("Please type one of the above options.\n");
+            }
         }
     }
 }

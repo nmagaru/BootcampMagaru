@@ -1,0 +1,21 @@
+Sandwich #1 - $11.50
+	Size:		8"
+	Bread:		white
+	Toasted?:	yes
+	Toppings:
+		meat:
+			roast beef
+			salami
+		cheese:
+			american
+		other toppings:
+			guacamole
+			onions
+		sauce:
+			ketchup
+
+No drinks were purchased.
+
+No chips were purchased.
+
+Total Price: $11.50

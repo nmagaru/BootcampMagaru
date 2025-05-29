@@ -1,11 +1,22 @@
 package org.example;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
     private static Order order;
+    private static final List<String> TOPPING_TYPES = new ArrayList<>(
+            Arrays.asList(
+                    "meat",
+                    "cheese",
+                    "other toppings",
+                    "sauce",
+                    "sides"
+            )
+    );
 
 
     public static void displayMenu() {
@@ -127,35 +138,86 @@ public class UserInterface {
     private static void processSandwichRequest() {
         System.out.println("Create Your Sandwich");
         System.out.println("----------------------------");
+        Scanner scanner = new Scanner(System.in);
 
-        //create bread topping
-        String userBread = OrderRepository.enterOption("bread");
-        Topping bread = new Topping("bread", userBread);
+        //prompt user for signature or not
+        System.out.print("Signature sandwich, or from scratch? (signature/scratch) ");
+        String createInput = scanner.nextLine();
 
-        //set sandwich size, update bread cost
-        int userSize = OrderRepository.enterSize();
-        BigDecimal userSizeBD = BigDecimal.valueOf(userSize);
-        bread.addToCost(userSizeBD.multiply(BigDecimal.valueOf(1.50)));
+        if (createInput.equalsIgnoreCase("signature")) {
+            System.out.println();
+            String userSignature = OrderRepository.enterOption("signature");
 
-        //set toasted or not
-        boolean userToasted = OrderRepository.enterToasted();
+            if (userSignature.equalsIgnoreCase("blt")) {
+                BLT blt = new BLT();
 
-        //create sandwich from inputted values
-        Sandwich sandwich = new Sandwich(bread, userSize, userToasted);
+                BigDecimal bltSizeBD = BigDecimal.valueOf(blt.getSize());
+                blt.getBread().addToCost(bltSizeBD.multiply(BigDecimal.valueOf(1.50)));
 
-        //add toppings to sandwich
-        System.out.println("\n[Toppings]");
-        OrderRepository.enterToppings("meat")
-                .forEach(sandwich::addTopping);
-        OrderRepository.enterToppings("cheese")
-                .forEach(sandwich::addTopping);
-        OrderRepository.enterToppings("other toppings")
-                .forEach(sandwich::addTopping);
-        OrderRepository.enterToppings("sauce")
-                .forEach(sandwich::addTopping);
-        OrderRepository.enterToppings("sides")
-                .forEach(sandwich::addTopping);
-        order.addSandwich(sandwich);
+                List<Topping> newToppings = new ArrayList<>();
+                for (String type : TOPPING_TYPES) {
+                    newToppings.addAll(OrderRepository.updateToppings(
+                            type, blt.getToppings(), true
+                    ));
+                }
+
+                blt.clearToppings();
+                newToppings.forEach(blt::addTopping);
+
+                order.addSandwich(blt);
+            }
+            else if (userSignature.equalsIgnoreCase("philly cheesesteak")) {
+                PhillyCheeseSteak philly = new PhillyCheeseSteak();
+
+                BigDecimal phillySizeBD = BigDecimal.valueOf(philly.getSize());
+                philly.getBread().addToCost(phillySizeBD.multiply(BigDecimal.valueOf(1.50)));
+
+                List<Topping> newToppings = new ArrayList<>();
+                for (String type : TOPPING_TYPES) {
+                    newToppings.addAll(OrderRepository.updateToppings(
+                            type, philly.getToppings(), true
+                    ));
+                }
+
+                philly.clearToppings();
+                newToppings.forEach(philly::addTopping);
+
+                order.addSandwich(philly);
+            }
+        }
+        else if (createInput.equalsIgnoreCase("scratch")) {
+            //create bread topping
+            String userBread = OrderRepository.enterOption("bread");
+            Topping bread = new Topping("bread", userBread);
+
+            //set sandwich size, update bread cost
+            int userSize = OrderRepository.enterSize();
+            BigDecimal userSizeBD = BigDecimal.valueOf(userSize);
+            bread.addToCost(userSizeBD.multiply(BigDecimal.valueOf(1.50)));
+
+            //set toasted or not
+            boolean userToasted = OrderRepository.enterToasted();
+
+            //create sandwich from inputted values
+            Sandwich sandwich = new Sandwich(bread, userSize, userToasted);
+
+            //add toppings to sandwich
+            System.out.println("\n[Toppings]");
+            for (String type : TOPPING_TYPES) {
+                //OrderRepository.enterToppings(type).forEach(sandwich::addTopping);
+                OrderRepository.updateToppings(
+                        type, null, false
+                ).forEach(sandwich::addTopping);
+            }
+
+            order.addSandwich(sandwich);
+        }
+        else {
+            System.out.println("Please type one of the previous options.\n");
+            return;
+        }
+
+
     }
 
     private static void processDrinkRequest() {
