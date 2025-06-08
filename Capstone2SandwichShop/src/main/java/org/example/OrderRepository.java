@@ -94,13 +94,18 @@ public class OrderRepository {
     }
 
     //used for size specifically due to int results
-    public static int enterSize() {
+    public static int enterSize(String type) {
         Scanner scanner = new Scanner(System.in);
         String sizeInput;
 
         while (true) {
             System.out.println("Sizes");
-            System.out.println("Small\t|\tMedium\t|\tLarge");
+            if (type.equalsIgnoreCase("bread")) {
+                System.out.println("Small (4\")\t|\tMedium (8\")\t|\tLarge (12\")");
+            }
+            else {
+                System.out.println("Small\t|\tMedium\t|\tLarge");
+            }
 
             System.out.print("Choose your size: ");
             sizeInput = scanner.nextLine();

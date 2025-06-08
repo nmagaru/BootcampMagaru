@@ -7,3 +7,5 @@ date|time|description|vendor|amount
 2025-04-03|14:31:35|test previous month payment|test|-50.00
 2024-05-01|14:33:20|test previous year deposit|test|1000.00
 2024-05-06|14:33:48|test previous year payment|test|-1000.00
+2025-05-02|10:11:45|class paycheck|year up|100.00
+2025-05-02|10:12:13|food|target|-99.00

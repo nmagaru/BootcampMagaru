@@ -23,7 +23,7 @@ public class UserInterface {
         Scanner scanner = new Scanner(System.in);
         int selectionHome;
 
-        System.out.println("Welcome to DELI-cious!");
+        System.out.println("\nWelcome to DELI-cious!\n");
         while (true) {
             displayHomeScreen();
 
@@ -194,7 +194,7 @@ public class UserInterface {
             Topping bread = new Topping("bread", userBread);
 
             //set sandwich size, update bread cost
-            int userSize = OrderRepository.enterSize();
+            int userSize = OrderRepository.enterSize("bread");
             BigDecimal userSizeBD = BigDecimal.valueOf(userSize);
             bread.addToCost(userSizeBD.multiply(BigDecimal.valueOf(1.50)));
 
@@ -217,8 +217,6 @@ public class UserInterface {
             System.out.println("Please type one of the previous options.\n");
             return;
         }
-
-
     }
 
     private static void processDrinkRequest() {
@@ -226,7 +224,7 @@ public class UserInterface {
         System.out.println("----------------------------");
 
         //get drink choice
-        int userSize = OrderRepository.enterSize();
+        int userSize = OrderRepository.enterSize("drink");
         String userDrink = OrderRepository.enterOption("drink");
 
         Drink drink = new Drink(userSize, userDrink);
@@ -251,11 +249,10 @@ public class UserInterface {
         System.out.println(OrderRepository.writeDrinks(order));
         System.out.println(OrderRepository.writeChips(order));
 
+        order.setTotal(BigDecimal.valueOf(0));
         order.calculateTotal();
         System.out.printf("Total Price: $%.2f\n\n", order.getTotal());
 
         FileManager.createReceipt(order);
-
-        init();
     }
 }

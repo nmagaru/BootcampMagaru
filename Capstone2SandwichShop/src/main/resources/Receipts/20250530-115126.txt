@@ -1,0 +1,40 @@
+Date: 05-30-2025
+Time: 11:51
+
+Sandwich #1 - $12.00
+	Size:		8"
+	Bread:		white
+	Toasted?:	yes
+	Toppings:
+		meat:
+			ham
+			salami
+		cheese:
+			swiss
+		other toppings:
+			lettuce
+		sauce:
+			mayo
+Sandwich #2 - $10.50
+	Size:		8"
+	Bread:		white
+	Toasted?:	yes
+	Toppings:
+		meat:
+			ham
+		cheese:
+			cheddar
+		other toppings:
+			lettuce
+			tomato
+		sauce:
+			ranch
+
+Drink #1 - $2.00
+	Size:	small
+	Flavor:	coke
+
+Chips - $1.50
+	lays
+
+Total Price: $26.00

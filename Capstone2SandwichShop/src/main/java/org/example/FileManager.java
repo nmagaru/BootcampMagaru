@@ -19,7 +19,7 @@ public class FileManager {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
             while ((input = bufferedReader.readLine()) != null) {
-                choices = new ArrayList<String>(Arrays.asList(input.split("\\|")));
+                choices = new ArrayList<>(Arrays.asList(input.split("\\|")));
 
                 if (choiceType.equalsIgnoreCase(choices.get(0))) {
                     //remove choice type from search list
@@ -76,6 +76,14 @@ public class FileManager {
 
             //write to file
             FileWriter writer = new FileWriter(file, true);
+
+
+            DateTimeFormatter dateReceiptFormatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+            DateTimeFormatter timeReceiptFormatter = DateTimeFormatter.ofPattern("hh:mm");
+            String todayReceipt = LocalDate.now().format(dateReceiptFormatter);
+            String nowReceipt = LocalTime.now().format(timeReceiptFormatter);
+            writer.write("Date: " + todayReceipt + "\n");
+            writer.write("Time: " + nowReceipt + "\n\n");
 
             //write functions modified to work for both ui and receipt file
             writer.write(OrderRepository.writeSandwiches(order));

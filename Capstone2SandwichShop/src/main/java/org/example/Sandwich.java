@@ -61,15 +61,22 @@ public class Sandwich {
 
 
     //custom functions
-    //helper, check if topping  is already in list
+    //helper, check if topping type is already in list
     public boolean toppingTypeInList(String type) {
         return toppings.stream()
                 .anyMatch(topping -> type.equalsIgnoreCase(topping.getType()));
     }
 
+    //helper, check if topping is already in list
+    public boolean toppingInList(String name) {
+        return toppings.stream()
+                .anyMatch(topping -> name.equalsIgnoreCase(topping.getName()));
+    }
+
     //add topping to sandwich
     public void addTopping(Topping topping) {
         String type = topping.getType();
+        String name = topping.getName();
         BigDecimal size = BigDecimal.valueOf(this.size);
         BigDecimal addCost;
 
@@ -80,7 +87,9 @@ public class Sandwich {
                     addCost = size.multiply(BigDecimal.valueOf(1.00));
                 }
                 else {
-                    topping.setCost(BigDecimal.valueOf(0.50));
+                    if (toppingInList(name)) {
+                        topping.setCost(BigDecimal.valueOf(0.50));
+                    }
                     addCost = size.multiply(BigDecimal.valueOf(0.50));
                 }
                 break;
@@ -89,7 +98,9 @@ public class Sandwich {
                     addCost = size.multiply(BigDecimal.valueOf(0.75));
                 }
                 else {
-                    topping.setCost(BigDecimal.valueOf(0.30));
+                    if (toppingInList(name)) {
+                        topping.setCost(BigDecimal.valueOf(0.30));
+                    }
                     addCost = size.multiply(BigDecimal.valueOf(0.30));
                 }
                 break;

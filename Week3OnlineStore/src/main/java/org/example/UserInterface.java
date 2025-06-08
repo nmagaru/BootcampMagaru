@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UserInterface {
-    private static List<Product> products;
     private static ShoppingCart cart;
 
 
     //OPTIONAL: handle all menus
     public static void displayMenu() {
-        products = FileLoader.readFile();
         cart = new ShoppingCart();
 
         Scanner scanner = new Scanner(System.in);
@@ -44,14 +42,14 @@ public class UserInterface {
             switch (selection) {
                 case 1:
                     //display all products
-                    ProductRepository.displayProducts(products);
+                    ProductRepository.displayProducts(ProductRepository.getProducts());
                     break;
                 case 2:
                     //search by sku
                     System.out.print("Search by product SKU: ");
                     String searchSKU = scanner.nextLine();
 
-                    Product skuResult = ProductRepository.findBySKU(products, searchSKU);
+                    Product skuResult = ProductRepository.findBySKU(searchSKU);
                     if (skuResult != null) {
                         System.out.println(skuResult.toString());
                     }
@@ -69,7 +67,7 @@ public class UserInterface {
                     double maxPrice = scanner.nextDouble();
                     scanner.nextLine();
 
-                    List<Product> priceResult = ProductRepository.findByProperty(products, "", minPrice, maxPrice, "price");
+                    List<Product> priceResult = ProductRepository.findByProperty("", minPrice, maxPrice, "price");
                     if (!priceResult.isEmpty()) {
                         ProductRepository.displayProducts(priceResult);
                     }
@@ -83,7 +81,7 @@ public class UserInterface {
                     System.out.print("Search by product name: ");
                     String searchName = scanner.nextLine();
 
-                    List<Product> nameResult = ProductRepository.findByProperty(products, searchName, 0, 0, "name");
+                    List<Product> nameResult = ProductRepository.findByProperty(searchName, 0, 0, "name");
                     if (!nameResult.isEmpty()) {
                         ProductRepository.displayProducts(nameResult);
                     }
@@ -95,17 +93,13 @@ public class UserInterface {
                     //add to cart
                     System.out.print("Enter the SKU of the product you want to add to your cart: ");
                     String purchaseSKU = scanner.nextLine();
-                    boolean productFound = false;
 
-                    for (Product product : products) {
-                        if (purchaseSKU.equalsIgnoreCase(product.getSku())) {
-                            productFound = true;
-                            cart.addProductToCart(product);
-                            System.out.println(product.getName() + " successfully added to cart.\n");
-                        }
+                    Product purchaseProduct = ProductRepository.findBySKU(purchaseSKU);
+                    if (purchaseProduct != null) {
+                        cart.addProductToCart(purchaseProduct);
+                        System.out.println(purchaseProduct.getName() + " successfully added to cart.\n");
                     }
-
-                    if (!productFound) {
+                    else {
                         System.out.println("Product not found.\n");
                     }
                     break;
