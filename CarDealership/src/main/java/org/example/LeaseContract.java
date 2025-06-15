@@ -5,8 +5,8 @@ public class LeaseContract extends Contract{
     private double leaseFee;
 
 
-    public LeaseContract(String date, String customerName, String customerEmail, Vehicle vehicleSold) {
-        super(date, customerName, customerEmail, vehicleSold);
+    public LeaseContract(String date, String customerName, String customerEmail, String customerPhone, Vehicle vehicleSold) {
+        super(date, customerName, customerEmail, customerPhone, vehicleSold);
 
         this.expEndingPrice = getVehicleSold().getPrice() * 0.5;
         this.leaseFee = getVehicleSold().getPrice() * 0.07;

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class AdminUserInterface {
-    public static void display() {
+    public static void display(SalesDao salesDao, LeaseDao leaseDao) {
         Scanner scanner = new Scanner(System.in);
         int selection;
 
@@ -21,7 +21,11 @@ public class AdminUserInterface {
 
             switch (selection) {
                 case 1:
-                    displayContracts(ContractDataManager.getContracts());
+                    //displayContracts(ContractDataManager.getContracts());
+                    displayContracts(salesDao.getAllSalesContracts());
+                    break;
+                case 2:
+                    displayContracts(leaseDao.getAllLeaseContracts());
                     break;
                 case 99:
                     System.out.println("Returning to user menu...\n");
@@ -35,7 +39,8 @@ public class AdminUserInterface {
 
     private static void displayAdminMenu() {
         System.out.println("\nChoose an option:");
-        System.out.println("1 - List ALL contracts");
+        System.out.println("1 - List SALES contracts");
+        System.out.println("2 - List LEASE contracts");
         System.out.println("99 - Quit");
         System.out.print("Your selection: ");
     }
@@ -50,7 +55,8 @@ public class AdminUserInterface {
                 System.out.println("Owner Information");
                 System.out.println(
                         "Name\t-\t" + contract.getCustomerName() +
-                        "\nEmail\t-\t" + contract.getCustomerEmail()
+                        "\nEmail\t-\t" + contract.getCustomerEmail() +
+                        "\nPhone\t-\t" + contract.getCustomerPhone()
                 );
                 System.out.println("\nVehicle Information");
                 System.out.println(
@@ -87,7 +93,8 @@ public class AdminUserInterface {
                 }
                 System.out.println("\nContract Information");
                 System.out.println(
-                        "Total Price\t\t-\t" + String.format("%.2f", contract.getTotalPrice()) +
+                        "Date Signed\t\t-\t" + contract.getDate() +
+                        "\nTotal Price\t\t-\t" + String.format("%.2f", contract.getTotalPrice()) +
                         "\nMonthly Payment\t-\t" + String.format("%.2f", contract.getMonthlyPayment())
                 );
             }

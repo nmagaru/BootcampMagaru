@@ -5,11 +5,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class UserInterface {
-    private Dealership dealership;
-    private String dbUserName;
-    private String dbPassword;
-    private String connectionString = "jdbc:mysql://localhost:3306/cardealershipdatabase";
+//    private Dealership dealership;
+    private final String dbUserName;
+    private final String dbPassword;
     private VehicleDao vehicleDao;
+    private SalesDao salesDao;
+    private LeaseDao leaseDao;
 
 
     public UserInterface(String dbUserName, String dbPassword) {
@@ -75,7 +76,7 @@ public class UserInterface {
                     userPassword = scanner.nextLine();
 
                     if (userPassword.equals(password)) {
-                        AdminUserInterface.display();
+                        AdminUserInterface.display(salesDao, leaseDao);
                     }
                     else {
                         System.out.println("Incorrect password.\n");
@@ -90,9 +91,12 @@ public class UserInterface {
 
 
     private void init() {
-        dealership = DealershipFileManager.getDealership();
+//        dealership = DealershipFileManager.getDealership();
 
+        String connectionString = "jdbc:mysql://localhost:3306/cardealershipdatabase";
         vehicleDao = new VehicleDao(connectionString, dbUserName, dbPassword);
+        salesDao = new SalesDao(connectionString, dbUserName, dbPassword);
+        leaseDao = new LeaseDao(connectionString, dbUserName, dbPassword);
     }
 
     private void displayVehicles(List<Vehicle> vehicles) {
@@ -306,8 +310,8 @@ public class UserInterface {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate today = LocalDate.now();
         String todayString = today.format(dateFormatter);
-        String userName, userEmail, userSellOrLease, userFinance;
-        int userRemoveVin;
+        String userName, userEmail, userSellOrLease, userFinance, userPhone;
+        int userSellLeaseVin;
         boolean isFinanced;
 
         try {
@@ -315,15 +319,26 @@ public class UserInterface {
             userName = scanner.nextLine();
             System.out.print("Enter your email: ");
             userEmail = scanner.nextLine();
+            System.out.print("Enter your phone number in the format xxx-xxx-xxxx: ");
+            userPhone = scanner.nextLine();
+            if (!userPhone.matches("\\d{3}-\\d{3}-\\d{4}")) {
+                System.out.println("Please enter your phone number in the correct format.\n");
+                return;
+            }
             System.out.print("Enter the vehicle's identification number to sell/lease: ");
-            userRemoveVin = Integer.parseInt(scanner.nextLine());
+            userSellLeaseVin = Integer.parseInt(scanner.nextLine());
         }
         catch (Exception ex) {
             System.out.println("Please enter a valid identification number.\n");
             return;
         }
 
-        Vehicle sellLeaseVehicle = dealership.getVehicleByVin(userRemoveVin);
+//        Vehicle sellLeaseVehicle = dealership.getVehicleByVin(userRemoveVin);
+        Vehicle sellLeaseVehicle = vehicleDao.getVehicle(userSellLeaseVin);
+        if (!vehicleDao.sellVehicle(userSellLeaseVin)) {
+            System.out.println("Vehicle has already been sold.\n");
+            return;
+        }
 
         if (sellLeaseVehicle != null) {
             System.out.print("Would you like to SELL or LEASE this vehicle? (Please type your selection): ");
@@ -348,13 +363,16 @@ public class UserInterface {
                         todayString,
                         userName,
                         userEmail,
+                        userPhone,
                         sellLeaseVehicle,
                         isFinanced
                 );
 
                 System.out.println("Total price: " + String.format("%.2f", salesContract.getTotalPrice()));
                 System.out.println("Monthly payment: " + String.format("%.2f", salesContract.getMonthlyPayment()));
-                ContractDataManager.saveContract(salesContract);
+
+//                ContractDataManager.saveContract(salesContract);
+                salesDao.addSalesContract(salesContract);
             }
             else if (userSellOrLease.equalsIgnoreCase("lease")) {
                 if (today.getYear() - sellLeaseVehicle.getYear() > 3) {
@@ -366,12 +384,15 @@ public class UserInterface {
                             todayString,
                             userName,
                             userEmail,
+                            userPhone,
                             sellLeaseVehicle
                     );
 
                     System.out.println("Total price: " + String.format("%.2f", leaseContract.getTotalPrice()));
                     System.out.println("Monthly payment: " + String.format("%.2f", leaseContract.getMonthlyPayment()));
-                    ContractDataManager.saveContract(leaseContract);
+
+//                    ContractDataManager.saveContract(leaseContract);
+                    leaseDao.addLeaseContract(leaseContract);
                 }
             }
             else {
@@ -379,8 +400,10 @@ public class UserInterface {
                 return;
             }
 
-            dealership.removeVehicle(sellLeaseVehicle);
-            DealershipFileManager.saveDealership(dealership);
+//            dealership.removeVehicle(sellLeaseVehicle);
+//            DealershipFileManager.saveDealership(dealership);
+
+
             System.out.println("Contract successfully created.\n");
         }
         else {

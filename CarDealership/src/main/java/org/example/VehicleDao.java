@@ -16,6 +16,36 @@ public class VehicleDao {
         this.password = password;
     }
 
+
+    public Vehicle getVehicle(int vin) {
+        String query = "SELECT * FROM vehicles WHERE vin = ?";
+
+        try(Connection conn = DriverManager.getConnection(connectionString, userName, password);
+            PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, vin);
+            try(ResultSet rs = stmt.executeQuery()) {
+                if(rs.next()) {
+                    return new Vehicle(
+                            rs.getInt("vin"),
+                            rs.getInt("year"),
+                            rs.getString("brand"),
+                            rs.getString("model"),
+                            rs.getString("type"),
+                            rs.getString("color"),
+                            rs.getInt("mileage"),
+                            rs.getDouble("price")
+                    );
+                }
+            }
+        }
+        catch(SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
     public List<Vehicle> getVehicles (List<String> search, String searchType) {
         List<Vehicle> list = new ArrayList<>();
         String query = switch (searchType) {
@@ -126,5 +156,36 @@ public class VehicleDao {
         catch(SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public boolean sellVehicle(int vin) {
+        String checkQuery = "SELECT * FROM vehicles WHERE vin = ?";
+        String sellQuery = "UPDATE vehicles SET sold = 1 WHERE vin = ?";
+
+        try(Connection conn = DriverManager.getConnection(connectionString, userName, password);
+            PreparedStatement checkStmt = conn.prepareStatement(checkQuery)) {
+
+            checkStmt.setInt(1, vin);
+
+            try(ResultSet rs = checkStmt.executeQuery()) {
+                if(rs.next()) {
+                    if (!rs.getBoolean("sold")) {
+                        try (PreparedStatement sellStmt = conn.prepareStatement(sellQuery)) {
+
+                            sellStmt.setInt(1, vin);
+
+                            sellStmt.executeUpdate();
+
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+        catch(SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return false;
     }
 }

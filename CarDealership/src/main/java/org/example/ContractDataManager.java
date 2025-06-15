@@ -87,66 +87,66 @@ public class ContractDataManager {
             }
     }
 
-    public static List<Contract> getContracts() {
-        String input;
-        ArrayList<Contract> contracts = new ArrayList<>();
-        boolean isFinanced = true;
-
-        try {
-            FileReader fileReader = new FileReader(FILE_PATH);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-
-            while ((input = bufferedReader.readLine()) != null) {
-                String[] properties = input.split("\\|");
-
-                Vehicle currentVehicle = new Vehicle(
-                        Integer.parseInt(properties[4]),
-                        Integer.parseInt(properties[5]),
-                        properties[6],
-                        properties[7],
-                        properties[8],
-                        properties[9],
-                        Integer.parseInt(properties[10]),
-                        Double.parseDouble(properties[11])
-                );
-
-                if (properties[0].equalsIgnoreCase("sale")) {
-                    if (properties[15].equalsIgnoreCase("no")) {
-                        isFinanced = false;
-                    }
-                    else if (properties[15].equalsIgnoreCase("yes")) {
-                        isFinanced = true;
-                    }
-
-                    SalesContract salesContract = new SalesContract(
-                            properties[1],
-                            properties[2],
-                            properties[3],
-                            currentVehicle,
-                            isFinanced
-                    );
-
-                    contracts.add(salesContract);
-                }
-                else if (properties[0].equalsIgnoreCase("lease")) {
-                    LeaseContract leaseContract = new LeaseContract(
-                            properties[1],
-                            properties[2],
-                            properties[3],
-                            currentVehicle
-                    );
-
-                    contracts.add(leaseContract);
-                }
-            }
-
-            bufferedReader.close();
-        }
-        catch (IOException ex) {
-            System.out.println("Failed to load csv file.");
-            ex.printStackTrace();
-        }
-
-        return contracts;
-    }
+//    public static List<Contract> getContracts() {
+//        String input;
+//        ArrayList<Contract> contracts = new ArrayList<>();
+//        boolean isFinanced = true;
+//
+//        try {
+//            FileReader fileReader = new FileReader(FILE_PATH);
+//            BufferedReader bufferedReader = new BufferedReader(fileReader);
+//
+//            while ((input = bufferedReader.readLine()) != null) {
+//                String[] properties = input.split("\\|");
+//
+//                Vehicle currentVehicle = new Vehicle(
+//                        Integer.parseInt(properties[4]),
+//                        Integer.parseInt(properties[5]),
+//                        properties[6],
+//                        properties[7],
+//                        properties[8],
+//                        properties[9],
+//                        Integer.parseInt(properties[10]),
+//                        Double.parseDouble(properties[11])
+//                );
+//
+//                if (properties[0].equalsIgnoreCase("sale")) {
+//                    if (properties[15].equalsIgnoreCase("no")) {
+//                        isFinanced = false;
+//                    }
+//                    else if (properties[15].equalsIgnoreCase("yes")) {
+//                        isFinanced = true;
+//                    }
+//
+//                    SalesContract salesContract = new SalesContract(
+//                            properties[1],
+//                            properties[2],
+//                            properties[3],
+//                            currentVehicle,
+//                            isFinanced
+//                    );
+//
+//                    contracts.add(salesContract);
+//                }
+//                else if (properties[0].equalsIgnoreCase("lease")) {
+//                    LeaseContract leaseContract = new LeaseContract(
+//                            properties[1],
+//                            properties[2],
+//                            properties[3],
+//                            currentVehicle
+//                    );
+//
+//                    contracts.add(leaseContract);
+//                }
+//            }
+//
+//            bufferedReader.close();
+//        }
+//        catch (IOException ex) {
+//            System.out.println("Failed to load csv file.");
+//            ex.printStackTrace();
+//        }
+//
+//        return contracts;
+//    }
 }
