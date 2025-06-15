@@ -2,17 +2,23 @@ package org.example;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class UserInterface {
-    private static Dealership dealership;
+    private Dealership dealership;
+    private String dbUserName;
+    private String dbPassword;
+    private String connectionString = "jdbc:mysql://localhost:3306/cardealershipdatabase";
+    private VehicleDao vehicleDao;
 
 
-    public UserInterface() {}
+    public UserInterface(String dbUserName, String dbPassword) {
+        this.dbUserName = dbUserName;
+        this.dbPassword = dbPassword;
+    }
 
 
-    public static void display() {
+    public void display() {
         init();
 
         Scanner scanner = new Scanner(System.in);
@@ -83,11 +89,13 @@ public class UserInterface {
     }
 
 
-    private static void init() {
+    private void init() {
         dealership = DealershipFileManager.getDealership();
+
+        vehicleDao = new VehicleDao(connectionString, dbUserName, dbPassword);
     }
 
-    private static void displayVehicles(List<Vehicle> vehicles) {
+    private void displayVehicles(List<Vehicle> vehicles) {
         if (vehicles.isEmpty()) {
             System.out.println("No vehicles were found.\n");
         }
@@ -101,13 +109,13 @@ public class UserInterface {
                         "\nType\t\t-\t" + vehicle.getVehicleType() +
                         "\nColor\t\t-\t" + vehicle.getColor() +
                         "\nMileage\t\t-\t" + vehicle.getOdometer() +
-                        "\nPrice\t\t-\t" + vehicle.getPrice()
+                        "\nPrice\t\t-\t" + String.format("%.02f", vehicle.getPrice())
                 );
             }
         }
     }
 
-    private static void displayMenu() {
+    private void displayMenu() {
         System.out.println("\nChoose an option:");
         System.out.println("1 - Find vehicles within a price range");
         System.out.println("2 - Find vehicles by make / model");
@@ -124,7 +132,7 @@ public class UserInterface {
         System.out.print("Your selection: ");
     }
 
-    private static void processGetByPriceRequest() {
+    private void processGetByPriceRequest() {
         Scanner scanner = new Scanner(System.in);
         double userPriceMin, userPriceMax;
 
@@ -139,10 +147,13 @@ public class UserInterface {
             return;
         }
 
-        displayVehicles(dealership.getVehiclesByPrice(userPriceMin, userPriceMax));
+//        displayVehicles(dealership.getVehiclesByPrice(userPriceMin, userPriceMax));
+        List<String> priceSearch = Arrays
+                .asList(String.valueOf(userPriceMin), String.valueOf(userPriceMax));
+        displayVehicles(vehicleDao.getVehicles(priceSearch, "price"));
     }
 
-    private static void processGetByMakeModelRequest() {
+    private void processGetByMakeModelRequest() {
         Scanner scanner = new Scanner(System.in);
         String userMake, userModel;
 
@@ -151,10 +162,12 @@ public class UserInterface {
         System.out.print("Enter a model: ");
         userModel = scanner.nextLine();
 
-        displayVehicles(dealership.getVehiclesByMakeModel(userMake, userModel));
+//        displayVehicles(dealership.getVehiclesByMakeModel(userMake, userModel));
+        List<String> makeModelSearch = Arrays.asList(userMake, userModel);
+        displayVehicles(vehicleDao.getVehicles(makeModelSearch, "make/model"));
     }
 
-    private static void processGetByYearRequest() {
+    private void processGetByYearRequest() {
         Scanner scanner = new Scanner(System.in);
         int userYearMin, userYearMax;
 
@@ -169,20 +182,25 @@ public class UserInterface {
             return;
         }
 
-        displayVehicles(dealership.getVehiclesByYear(userYearMin, userYearMax));
+//        displayVehicles(dealership.getVehiclesByYear(userYearMin, userYearMax));
+        List<String> yearSearch = Arrays
+                .asList(String.valueOf(userYearMin), String.valueOf(userYearMax));
+        displayVehicles(vehicleDao.getVehicles(yearSearch, "year"));
     }
 
-    private static void processGetByColorRequest() {
+    private void processGetByColorRequest() {
         Scanner scanner = new Scanner(System.in);
         String userColor;
 
         System.out.print("\nEnter a color: ");
         userColor = scanner.nextLine();
 
-        displayVehicles(dealership.getVehiclesByColor(userColor));
+//        displayVehicles(dealership.getVehiclesByColor(userColor));
+        List<String> colorSearch = Collections.singletonList(userColor);
+        displayVehicles(vehicleDao.getVehicles(colorSearch, "color"));
     }
 
-    private static void processGetByMileageRequest() {
+    private void processGetByMileageRequest() {
         Scanner scanner = new Scanner(System.in);
         int userMileageMin, userMileageMax;
 
@@ -197,24 +215,30 @@ public class UserInterface {
             return;
         }
 
-        displayVehicles(dealership.getVehiclesByMileage(userMileageMin, userMileageMax));
+//        displayVehicles(dealership.getVehiclesByMileage(userMileageMin, userMileageMax));
+        List<String> mileageSearch = Arrays
+                .asList(String.valueOf(userMileageMin), String.valueOf(userMileageMax));
+        displayVehicles(vehicleDao.getVehicles(mileageSearch, "mileage"));
     }
 
-    private static void processGetByVehicleTypeRequest() {
+    private void processGetByVehicleTypeRequest() {
         Scanner scanner = new Scanner(System.in);
         String userVehicleType;
 
         System.out.print("\nEnter a vehicle type: ");
         userVehicleType = scanner.nextLine();
 
-        displayVehicles(dealership.getVehiclesByType(userVehicleType));
+//        displayVehicles(dealership.getVehiclesByType(userVehicleType));
+        List<String> typeSearch = Collections.singletonList(userVehicleType);
+        displayVehicles(vehicleDao.getVehicles(typeSearch, "type"));
     }
 
-    private static void processGetAllVehiclesRequest() {
-        displayVehicles(dealership.getAllVehicles());
+    private void processGetAllVehiclesRequest() {
+//        (dealership.getAllVehicles());
+        displayVehicles(vehicleDao.getVehicles(new ArrayList<>(), "all"));
     }
 
-    private static void processAddVehicleRequest() {
+    private void processAddVehicleRequest() {
         Scanner scanner = new Scanner(System.in);
         int userVin, userYear, userMileage;
         String userMake, userModel, userVehicleType, userColor;
@@ -244,11 +268,13 @@ public class UserInterface {
         }
 
         Vehicle userVehicle = new Vehicle(userVin, userYear, userMake, userModel, userVehicleType, userColor, userMileage, userPrice);
-        dealership.addVehicle(userVehicle);
-        DealershipFileManager.saveDealership(dealership);
+
+//        dealership.addVehicle(userVehicle);
+//        DealershipFileManager.saveDealership(dealership);
+        vehicleDao.addVehicle(userVehicle);
     }
 
-    private static void processRemoveVehicleRequest() {
+    private void processRemoveVehicleRequest() {
         Scanner scanner = new Scanner(System.in);
         int userRemoveVin;
 
@@ -261,19 +287,21 @@ public class UserInterface {
             return;
         }
 
-        Vehicle removeVehicle = dealership.getVehicleByVin(userRemoveVin);
+//        Vehicle removeVehicle = dealership.getVehicleByVin(userRemoveVin);
+//
+//        if (removeVehicle != null) {
+//            dealership.removeVehicle(removeVehicle);
+//            DealershipFileManager.saveDealership(dealership);
+//            System.out.println("Vehicle successfully removed.");
+//        }
+//        else {
+//            System.out.println("Vehicle not found.\n");
+//        }
 
-        if (removeVehicle != null) {
-            dealership.removeVehicle(removeVehicle);
-            DealershipFileManager.saveDealership(dealership);
-            System.out.println("Vehicle successfully removed.");
-        }
-        else {
-            System.out.println("Vehicle not found.\n");
-        }
+        vehicleDao.removeVehicle(userRemoveVin);
     }
 
-    private static void processSellLeaseVehicleRequest() {
+    private void processSellLeaseVehicleRequest() {
         Scanner scanner = new Scanner(System.in);
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate today = LocalDate.now();
