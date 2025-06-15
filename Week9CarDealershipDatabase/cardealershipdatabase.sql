@@ -83,4 +83,13 @@ WHERE vin = 783456789;
 INSERT INTO sales_contracts (name, address, phone, date, price, vin) VALUES
 ('Evelyn Brooks', '789 Walnut Dr', '555-999-0000', '2025-06-08', 25000, 783456789);
 
+ALTER TABLE vehicles
+ADD COLUMN mileage 	INT,
+ADD COLUMN price 	DECIMAL(10, 2);
 
+UPDATE vehicles SET mileage = 12000, price = 21999.95 WHERE vin = 783456789;
+UPDATE vehicles SET mileage = 5000, price = 24499.99 WHERE vin = 915273846;
+UPDATE vehicles SET mileage = 30000, price = 30950.00 WHERE vin = 674382915;
+UPDATE vehicles SET mileage = 45000, price = 37999.50 WHERE vin = 839104562;
+UPDATE vehicles SET mileage = 8000, price = 44990.00 WHERE vin = 104857392;
+UPDATE vehicles SET mileage = 60000, price = 28995.75 WHERE vin = 234981076;

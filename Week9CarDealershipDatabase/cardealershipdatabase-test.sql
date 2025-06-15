@@ -1,4 +1,5 @@
-SELECT * FROM dealerships;
+SELECT * FROM vehicles;
+SELECT * FROM inventory;
 
 -- search by dealership id, return all vehicle info
 SELECT d.dealership_id, d.name, v.*
